@@ -8,10 +8,12 @@ import {
   AllowNull,
   ForeignKey,
   BelongsTo,
+  HasOne,
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
 import { Match } from "./Match";
 import { TeamScores } from "./TeamScore";
+import { TeamStats } from "./TeamStats";
 
 interface TeamAttributes {
   id: number;
@@ -45,4 +47,7 @@ export class Team extends Model<TeamAttributes, TeamCreationAttributes> {
 
   @HasMany(() => TeamScores)
   team_scores!: TeamScores[];
+
+  @HasOne(() => TeamStats)
+  team_stats!: TeamStats;
 }
