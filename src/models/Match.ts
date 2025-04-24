@@ -41,17 +41,15 @@ export class Match extends Model<MatchAttributes, MatchCreationAttributes> {
   })
   members!: number;
 
-  @AllowNull(false)
   @Column({
     type: DataType.DATE,
   })
-  start_time!: Date;
+  start_time?: Date;
 
-  @AllowNull(false)
   @Column({
     type: DataType.DATE,
   })
-  end_time!: Date;
+  end_time?: Date;
 
   @ForeignKey(() => Teacher)
   @Column({
