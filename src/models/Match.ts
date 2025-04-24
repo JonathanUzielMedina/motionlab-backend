@@ -12,6 +12,7 @@ import {
 import { Optional } from "sequelize";
 import { Teacher } from "./Teacher";
 import { Round } from "./Round";
+import { Team } from "./Team";
 
 interface MatchAttributes {
   id: number;
@@ -66,4 +67,7 @@ export class Match extends Model<MatchAttributes, MatchCreationAttributes> {
 
   @HasMany(() => Round)
   rounds!: Round[];
+
+  @HasMany(() => Team)
+  team!: Team[];
 }
