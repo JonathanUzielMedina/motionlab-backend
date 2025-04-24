@@ -11,6 +11,7 @@ import {
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
 import { Match } from "./Match";
+import { TeamScores } from "./TeamScore";
 
 interface TeamAttributes {
   id: number;
@@ -41,4 +42,7 @@ export class Team extends Model<TeamAttributes, TeamCreationAttributes> {
     constraints: false,
   })
   match!: Match;
+
+  @HasMany(() => TeamScores)
+  team_scores!: TeamScores[];
 }

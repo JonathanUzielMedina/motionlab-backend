@@ -6,9 +6,11 @@ import {
   AllowNull,
   ForeignKey,
   BelongsTo,
+  HasMany,
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
 import { Match } from "./Match";
+import { TeamScores } from "./TeamScore";
 
 interface RoundAttributes {
   id: number;
@@ -53,4 +55,7 @@ export class Round extends Model<RoundAttributes, RoundCreationAttributes> {
     constraints: false,
   })
   match!: Match;
+
+  @HasMany(() => TeamScores)
+  team_scores!: TeamScores[];
 }
