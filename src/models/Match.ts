@@ -11,6 +11,7 @@ import {
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
 import { Teacher } from "./Teacher";
+import { Round } from "./Round";
 
 interface MatchAttributes {
   id: number;
@@ -62,4 +63,7 @@ export class Match extends Model<MatchAttributes, MatchCreationAttributes> {
     constraints: false,
   })
   teacher!: Teacher;
+
+  @HasMany(() => Round)
+  rounds!: Round[];
 }
