@@ -28,23 +28,20 @@ export class TeamStats extends Model<
   TeamStatsAttributes,
   TeamStatsCreationAttributes
 > {
-  @AllowNull(false)
   @Column({
     type: DataType.INTEGER,
   })
-  played_rounds!: number;
+  played_rounds?: number;
 
-  @AllowNull(false)
   @Column({
     type: DataType.INTEGER,
   })
-  average_time!: number;
+  average_time?: number;
 
-  @AllowNull(false)
   @Column({
     type: DataType.INTEGER,
   })
-  average_position!: number;
+  average_position?: number;
 
   @ForeignKey(() => Team)
   @Column(DataType.INTEGER)
