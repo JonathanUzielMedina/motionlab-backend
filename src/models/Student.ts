@@ -11,9 +11,10 @@ import {
   HasOne,
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
+import { StudentTeam } from "./StudentTeam";
 
 interface StudentAttributes {
-  id: number;
+  id: string;
   played_rounds: number;
   average_time: number;
   average_match_position: number;
@@ -29,6 +30,13 @@ export class Student extends Model<
   StudentAttributes,
   StudentCreationAttributes
 > {
+
+  @PrimaryKey
+  @Column({
+    type: DataType.STRING,
+  })
+  declare id: string;
+
   @Column({
     type: DataType.INTEGER,
   })
@@ -48,4 +56,7 @@ export class Student extends Model<
     type: DataType.INTEGER,
   })
   average_historic_position?: number;
+
+  @HasMany(() => StudentTeam)
+  studentTeams!: StudentTeam[];
 }

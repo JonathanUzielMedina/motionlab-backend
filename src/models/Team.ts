@@ -14,6 +14,7 @@ import { Optional } from "sequelize";
 import { Match } from "./Match";
 import { TeamScores } from "./TeamScore";
 import { TeamStats } from "./TeamStats";
+import { StudentTeam } from "./StudentTeam";
 
 interface TeamAttributes {
   id: number;
@@ -50,4 +51,7 @@ export class Team extends Model<TeamAttributes, TeamCreationAttributes> {
 
   @HasOne(() => TeamStats)
   team_stats!: TeamStats;
+
+  @HasMany(() => StudentTeam)
+  studentTeams!: StudentTeam[];
 }
