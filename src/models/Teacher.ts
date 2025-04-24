@@ -5,9 +5,9 @@ import {
   HasMany,
   PrimaryKey,
   DataType,
+  AllowNull,
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
-import { table } from "console";
 
 interface TeacherAttributes {
   id: string;
@@ -24,9 +24,14 @@ export class Teacher extends Model<
   TeacherCreationAttributes
 > {
   @PrimaryKey
-  @Column(DataType.STRING)
+  @Column({
+    type: DataType.STRING,
+  })
   declare id: string;
 
-  @Column(DataType.STRING)
+  @AllowNull(false)
+  @Column({
+    type: DataType.STRING,
+  })
   pwd!: string;
 }
