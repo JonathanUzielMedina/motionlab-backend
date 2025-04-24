@@ -10,7 +10,8 @@ import {
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
 import { Match } from "./Match";
-import { TeamScores } from "./TeamScore";
+import { TeamScore } from "./TeamScore";
+import { StudentScore } from "./StudentScore";
 
 interface RoundAttributes {
   id: number;
@@ -56,6 +57,9 @@ export class Round extends Model<RoundAttributes, RoundCreationAttributes> {
   })
   match!: Match;
 
-  @HasMany(() => TeamScores)
-  team_scores!: TeamScores[];
+  @HasMany(() => TeamScore)
+  team_scores!: TeamScore[];
+
+  @HasMany(() => StudentScore)
+  student_scores!: StudentScore[];
 }

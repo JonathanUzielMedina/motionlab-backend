@@ -12,6 +12,7 @@ import {
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
 import { StudentTeam } from "./StudentTeam";
+import { StudentScore } from "./StudentScore";
 
 interface StudentAttributes {
   id: string;
@@ -30,7 +31,6 @@ export class Student extends Model<
   StudentAttributes,
   StudentCreationAttributes
 > {
-
   @PrimaryKey
   @Column({
     type: DataType.STRING,
@@ -59,4 +59,7 @@ export class Student extends Model<
 
   @HasMany(() => StudentTeam)
   studentTeams!: StudentTeam[];
+
+  @HasMany(() => StudentScore)
+  student_scores!: StudentScore[];
 }

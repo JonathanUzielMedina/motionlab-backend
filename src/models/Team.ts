@@ -12,7 +12,7 @@ import {
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
 import { Match } from "./Match";
-import { TeamScores } from "./TeamScore";
+import { TeamScore } from "./TeamScore";
 import { TeamStats } from "./TeamStats";
 import { StudentTeam } from "./StudentTeam";
 
@@ -46,8 +46,8 @@ export class Team extends Model<TeamAttributes, TeamCreationAttributes> {
   })
   match!: Match;
 
-  @HasMany(() => TeamScores)
-  team_scores!: TeamScores[];
+  @HasMany(() => TeamScore)
+  team_scores!: TeamScore[];
 
   @HasOne(() => TeamStats)
   team_stats!: TeamStats;

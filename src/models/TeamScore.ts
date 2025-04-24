@@ -9,7 +9,6 @@ import {
   ForeignKey,
   BelongsTo,
 } from "sequelize-typescript";
-import { Optional } from "sequelize";
 import { Round } from "./Round";
 import { Team } from "./Team";
 
@@ -28,7 +27,7 @@ interface TeamScoreCreationAttributes extends TeamScoreAttributes {}
   timestamps: true,
   updatedAt: false,
 })
-export class TeamScores extends Model<
+export class TeamScore extends Model<
   TeamScoreAttributes,
   TeamScoreCreationAttributes
 > {
