@@ -8,6 +8,7 @@ import {
   AllowNull,
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
+import { Match } from "./Match";
 
 interface TeacherAttributes {
   id: string;
@@ -34,4 +35,7 @@ export class Teacher extends Model<
     type: DataType.STRING,
   })
   pwd!: string;
+
+  @HasMany(() => Match)
+  matches!: Match[];
 }
