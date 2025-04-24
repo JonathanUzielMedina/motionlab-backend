@@ -19,6 +19,9 @@ interface MatchAttributes {
   teacher_id: number;
   teams: number;
   members: number;
+  rpm: number;
+  wheel_size: number;
+  distance: number;
   start_time: Date;
   end_time: Date;
 }
@@ -40,6 +43,24 @@ export class Match extends Model<MatchAttributes, MatchCreationAttributes> {
     type: DataType.INTEGER,
   })
   members!: number;
+
+  @AllowNull(false)
+  @Column({
+    type: DataType.FLOAT,
+  })
+  rpm!: number;
+
+  @AllowNull(false)
+  @Column({
+    type: DataType.FLOAT,
+  })
+  wheel_size!: number;
+
+  @AllowNull(false)
+  @Column({
+    type: DataType.FLOAT,
+  })
+  distance!: number;
 
   @Column({
     type: DataType.DATE,

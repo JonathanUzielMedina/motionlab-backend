@@ -16,9 +16,6 @@ import { StudentScore } from "./StudentScore";
 interface RoundAttributes {
   id: number;
   match_id: number;
-  rpm: number;
-  wheel_size: number;
-  distance: number;
 }
 
 interface RoundCreationAttributes extends Optional<RoundAttributes, "id"> {}
@@ -27,23 +24,6 @@ interface RoundCreationAttributes extends Optional<RoundAttributes, "id"> {}
   tableName: "rounds",
 })
 export class Round extends Model<RoundAttributes, RoundCreationAttributes> {
-  @AllowNull(false)
-  @Column({
-    type: DataType.FLOAT,
-  })
-  rpm!: number;
-
-  @AllowNull(false)
-  @Column({
-    type: DataType.FLOAT,
-  })
-  wheel_size!: number;
-
-  @AllowNull(false)
-  @Column({
-    type: DataType.FLOAT,
-  })
-  distance!: number;
 
   @ForeignKey(() => Match)
   @Column({
