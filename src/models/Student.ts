@@ -26,6 +26,7 @@ interface StudentCreationAttributes extends Optional<StudentAttributes, "id"> {}
 
 @Table({
   tableName: "students",
+  timestamps: false,
 })
 export class Student extends Model<
   StudentAttributes,

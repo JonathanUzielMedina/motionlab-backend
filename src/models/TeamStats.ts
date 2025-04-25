@@ -22,7 +22,8 @@ interface TeamStatsAttributes {
 interface TeamStatsCreationAttributes extends TeamStatsAttributes {}
 
 @Table({
-  tableName: "TeamStats",
+  tableName: "team_stats",
+  timestamps: false,
 })
 export class TeamStats extends Model<
   TeamStatsAttributes,

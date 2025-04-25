@@ -22,6 +22,7 @@ interface RoundCreationAttributes extends Optional<RoundAttributes, "id"> {}
 
 @Table({
   tableName: "rounds",
+  timestamps: false,
 })
 export class Round extends Model<RoundAttributes, RoundCreationAttributes> {
 
