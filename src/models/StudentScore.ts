@@ -11,7 +11,7 @@ import { Student } from "./Student";
 import { Round } from "./Round";
 
 interface StudentScoreAttributes {
-  student_id: number;
+  student_id: string;
   round_id: number;
   score: number;
   time: number;
@@ -46,9 +46,9 @@ export class StudentScore extends Model<StudentScoreAttributes, StudentScoreCrea
 
     @ForeignKey(() => Student)
     @Column({
-      type: DataType.INTEGER,
+      type: DataType.STRING,
     })
-    student_id!: number;
+    student_id!: string;
 
     @ForeignKey(() => Round)
     @Column({

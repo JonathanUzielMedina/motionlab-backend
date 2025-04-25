@@ -19,6 +19,7 @@ interface TeacherCreationAttributes extends Optional<TeacherAttributes, "id"> {}
 
 @Table({
   tableName: "teachers",
+  timestamps: false,
 })
 export class Teacher extends Model<
   TeacherAttributes,

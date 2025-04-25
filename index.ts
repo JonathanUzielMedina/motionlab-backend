@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 app.use(apiRouter);
 
-// connectionDB();
+connectionDB();
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);

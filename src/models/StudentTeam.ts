@@ -31,7 +31,7 @@ export class StudentTeam extends Model<
   @PrimaryKey
   @ForeignKey(() => Student)
   @Column({
-    type: DataType.STRING(9),
+    type: DataType.STRING,
   })
   id_student!: string;
 

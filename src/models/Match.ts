@@ -16,7 +16,7 @@ import { Team } from "./Team";
 
 interface MatchAttributes {
   id: number;
-  teacher_id: number;
+  teacher_id: string;
   teams: number;
   members: number;
   rpm: number;
@@ -30,6 +30,7 @@ interface MatchCreationAttributes extends Optional<MatchAttributes, "id"> {}
 
 @Table({
   tableName: "matches",
+  timestamps: false,
 })
 export class Match extends Model<MatchAttributes, MatchCreationAttributes> {
   @AllowNull(false)
@@ -74,9 +75,9 @@ export class Match extends Model<MatchAttributes, MatchCreationAttributes> {
 
   @ForeignKey(() => Teacher)
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.STRING,
   })
-  teacher_id!: number;
+  teacher_id!: string;
 
   @BelongsTo(() => Teacher, {
     foreignKey: "teacher_id",

@@ -25,7 +25,8 @@ interface TeamAttributes {
 interface TeamCreationAttributes extends Optional<TeamAttributes, "id"> {}
 
 @Table({
-  tableName: "Teams",
+  tableName: "teams",
+  timestamps: false,
 })
 export class Team extends Model<TeamAttributes, TeamCreationAttributes> {
   @AllowNull(false)
