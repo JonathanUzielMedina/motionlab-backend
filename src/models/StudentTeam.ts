@@ -5,7 +5,6 @@ import {
   ForeignKey,
   PrimaryKey,
   DataType,
-  AllowNull,
   BelongsTo,
 } from "sequelize-typescript";
 import { Optional } from "sequelize";

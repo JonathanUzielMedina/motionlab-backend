@@ -2,14 +2,10 @@ import {
   Table,
   Model,
   Column,
-  HasMany,
-  PrimaryKey,
   DataType,
-  AllowNull,
   ForeignKey,
   BelongsTo,
 } from "sequelize-typescript";
-import { Optional } from "sequelize";
 import { Team } from "./Team";
 
 interface TeamStatsAttributes {

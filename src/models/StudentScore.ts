@@ -18,53 +18,56 @@ interface StudentScoreAttributes {
   position: number;
 }
 
-interface StudentScoreCreationAttributes extends StudentScoreAttributes{}
+interface StudentScoreCreationAttributes extends StudentScoreAttributes {}
 
 @Table({
   tableName: "student_scores",
   timestamps: true,
   updatedAt: false,
 })
-export class StudentScore extends Model<StudentScoreAttributes, StudentScoreCreationAttributes>{
+export class StudentScore extends Model<
+  StudentScoreAttributes,
+  StudentScoreCreationAttributes
+> {
   @AllowNull(false)
-    @Column({
-      type: DataType.INTEGER,
-    })
-    score!: number;
+  @Column({
+    type: DataType.INTEGER,
+  })
+  score!: number;
 
-    @AllowNull(false)
-    @Column({
-      type: DataType.FLOAT,
-    })
-    time!: number;
+  @AllowNull(false)
+  @Column({
+    type: DataType.FLOAT,
+  })
+  time!: number;
 
-    @AllowNull(false)
-    @Column({
-      type: DataType.INTEGER,
-    })
-    position!: number;
+  @AllowNull(false)
+  @Column({
+    type: DataType.INTEGER,
+  })
+  position!: number;
 
-    @ForeignKey(() => Student)
-    @Column({
-      type: DataType.STRING,
-    })
-    student_id!: string;
+  @ForeignKey(() => Student)
+  @Column({
+    type: DataType.STRING,
+  })
+  student_id!: string;
 
-    @ForeignKey(() => Round)
-    @Column({
-      type: DataType.INTEGER,
-    })
-    round_id!: number;
+  @ForeignKey(() => Round)
+  @Column({
+    type: DataType.INTEGER,
+  })
+  round_id!: number;
 
-    @BelongsTo(() => Student, {
-      foreignKey: "student_id",
-      constraints: false,
-    })
-    student!: Student;
+  @BelongsTo(() => Student, {
+    foreignKey: "student_id",
+    constraints: false,
+  })
+  student!: Student;
 
-    @BelongsTo(() => Round, {
-      foreignKey: "round_id",
-      constraints: false,
-    })
-    round!: Round;
+  @BelongsTo(() => Round, {
+    foreignKey: "round_id",
+    constraints: false,
+  })
+  round!: Round;
 }
