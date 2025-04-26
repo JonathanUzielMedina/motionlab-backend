@@ -21,6 +21,8 @@ interface MatchAttributes {
   rpm: number;
   wheel_size: number;
   distance: number;
+  code: string;
+  active: boolean;
   start_time: Date;
   end_time: Date;
 }
@@ -61,6 +63,20 @@ export class Match extends Model<MatchAttributes, MatchCreationAttributes> {
     type: DataType.FLOAT,
   })
   distance!: number;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    unique: true,
+  })
+  code!: string;
+
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    unique: true,
+  })
+  active!: boolean;
 
   @Column({
     type: DataType.DATE,

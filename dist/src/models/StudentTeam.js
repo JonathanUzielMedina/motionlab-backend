@@ -45,6 +45,7 @@ __decorate([
 __decorate([
     (0, sequelize_typescript_1.BelongsTo)(() => Team_1.Team, {
         foreignKey: "id_team",
+        onDelete: "CASCADE",
     }),
     __metadata("design:type", Team_1.Team)
 ], StudentTeam.prototype, "team", void 0);
