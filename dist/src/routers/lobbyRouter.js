@@ -5,4 +5,5 @@ const lobbyController_1 = require("../controllers/lobbyController");
 const lobbyRouter = (0, express_1.Router)();
 lobbyRouter.get("/", lobbyController_1.getLobbyTeams);
 lobbyRouter.get("/:id", lobbyController_1.lobbyAccess);
+lobbyRouter.delete("/:id");
 exports.default = lobbyRouter;

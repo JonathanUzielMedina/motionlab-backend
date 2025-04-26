@@ -7,4 +7,6 @@ lobbyRouter.get("/", getLobbyTeams);
 
 lobbyRouter.get("/:id", lobbyAccess);
 
+lobbyRouter.delete("/:id");
+
 export default lobbyRouter;

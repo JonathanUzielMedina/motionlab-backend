@@ -87,3 +87,29 @@ export const lobbyAccess: RequestHandler = async (
     });
   }
 };
+
+export const deleteTeamFromLobby: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const { id } = req.params;
+  try {
+    await Team.destroy({
+      where: {
+        id: id,
+      },
+    });
+
+    res.status(200).json({
+      status: "success",
+      message: "Equipo eliminado correctamente",
+      teamId: id,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Error al intentar eliminar el equipo",
+      payload: null,
+    });
+  }
+};

@@ -1,48 +1,33 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLobbyTeams = void 0;
+exports.changeTeamStatus = void 0;
 const Team_1 = require("../models/Team");
-const Student_1 = require("../models/Student");
-const StudentTeam_1 = require("../models/StudentTeam");
-const getLobbyTeams = async (req, res) => {
-    const { matchId } = req.params;
+const changeTeamStatus = async (req, res) => {
+    const { id } = req.params;
     try {
-        const teams = await Team_1.Team.findAll({
-            where: {
-                match_id: matchId,
-                ready: true,
-            },
-            include: [
-                {
-                    model: StudentTeam_1.StudentTeam,
-                    include: [
-                        {
-                            model: Student_1.Student,
-                            attributes: ["id"],
-                        },
-                    ],
-                },
-            ],
-        });
-        const lobbyTeams = teams.map((team) => ({
-            teamId: team.id,
-            students: team.studentTeams.map((st) => ({
-                id: st.student.id,
-            })),
-        }));
+        const team = await Team_1.Team.findByPk(id);
+        if (!team) {
+            res.status(404).json({
+                message: "Equipo no encontrado",
+                status: "error",
+                payload: null,
+            });
+            return;
+        }
+        team.ready = true;
+        await team.save();
         res.status(200).json({
+            message: "Estado del equipo actualizado correctamente",
             status: "success",
-            message: "Equipos obtenidos correctamente",
-            payload: lobbyTeams,
+            payload: null,
         });
     }
     catch (error) {
-        console.error(error);
         res.status(500).json({
+            message: "Problemas en el servidor",
             status: "error",
-            message: "Error al obtener equipos",
             payload: null,
         });
     }
 };
-exports.getLobbyTeams = getLobbyTeams;
+exports.changeTeamStatus = changeTeamStatus;

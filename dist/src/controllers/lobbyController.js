@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.lobbyAccess = exports.getLobbyTeams = void 0;
+exports.deleteTeamFromLobby = exports.lobbyAccess = exports.getLobbyTeams = void 0;
 const Team_1 = require("../models/Team");
 const Student_1 = require("../models/Student");
 const StudentTeam_1 = require("../models/StudentTeam");
@@ -79,3 +79,26 @@ const lobbyAccess = async (req, res) => {
     }
 };
 exports.lobbyAccess = lobbyAccess;
+const deleteTeamFromLobby = async (req, res) => {
+    const { id } = req.params;
+    try {
+        await Team_1.Team.destroy({
+            where: {
+                id: id,
+            },
+        });
+        res.status(200).json({
+            status: "success",
+            message: "Equipo eliminado correctamente",
+            teamId: id,
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            status: "error",
+            message: "Error al intentar eliminar el equipo",
+            payload: null,
+        });
+    }
+};
+exports.deleteTeamFromLobby = deleteTeamFromLobby;

@@ -48,6 +48,7 @@ export class StudentTeam extends Model<
 
   @BelongsTo(() => Team, {
     foreignKey: "id_team",
+    onDelete: "CASCADE",
   })
   team!: Team;
 }

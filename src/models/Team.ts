@@ -52,6 +52,6 @@ export class Team extends Model<TeamAttributes, TeamCreationAttributes> {
   @HasOne(() => TeamStats)
   team_stats!: TeamStats;
 
-  @HasMany(() => StudentTeam)
+  @HasMany(() => StudentTeam, { onDelete: "CASCADE" })
   studentTeams!: StudentTeam[];
 }
