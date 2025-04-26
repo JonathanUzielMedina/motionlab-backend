@@ -1,5 +1,4 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const teamRouter = (0, express_1.Router)();
-exports.default = teamRouter;
+const matchRouter = (0, express_1.Router)();

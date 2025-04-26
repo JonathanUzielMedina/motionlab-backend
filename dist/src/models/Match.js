@@ -20,6 +20,8 @@ let Match = class Match extends sequelize_typescript_1.Model {
     rpm;
     wheel_size;
     distance;
+    code;
+    active;
     start_time;
     end_time;
     teacher_id;
@@ -63,6 +65,22 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], Match.prototype, "distance", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.STRING,
+        allowNull: false,
+        unique: true,
+    }),
+    __metadata("design:type", String)
+], Match.prototype, "code", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.BOOLEAN,
+        allowNull: false,
+        unique: true,
+    }),
+    __metadata("design:type", Boolean)
+], Match.prototype, "active", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.DATE,

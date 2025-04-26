@@ -2,8 +2,12 @@ import { Request, Response, RequestHandler } from "express";
 import { Team } from "../models/Team";
 import { Student } from "../models/Student";
 import { StudentTeam } from "../models/StudentTeam";
+import { Match } from "../models/Match";
 
-export const getLobbyTeams: RequestHandler = async (req, res) => {
+export const getLobbyTeams: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
   const { matchId } = req.params;
 
   try {
@@ -43,6 +47,43 @@ export const getLobbyTeams: RequestHandler = async (req, res) => {
       status: "error",
       message: "Error al obtener equipos",
       payload: null,
+    });
+  }
+};
+
+export const lobbyAccess: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const { code } = req.params;
+
+  try {
+    const match = await Match.findOne({
+      where: {
+        code: code,
+        active: true,
+      },
+    });
+
+    if (!match) {
+      res.status(404).json({
+        status: "error",
+        message: "Codigo invalido o la partida ya fue cerrada",
+        payload: null,
+      });
+      return;
+    }
+
+    res.status(200).json({
+      status: "success",
+      message: "Codigo valido",
+      payload: { match_id: match.id },
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error en el servidor",
+      payload: null,
+      status: "error",
     });
   }
 };
