@@ -21,11 +21,15 @@ const teacherAuthentication = async (req, res) => {
         }
         res.status(200).json({
             message: "LogIn realizado de forma correcta. Bienvenido.",
+            payload: id,
+            status: "success",
         });
     }
     catch (error) {
         res.status(500).json({
             message: "La solicitud no se proceso adecuadamente",
+            payload: null,
+            status: "error",
         });
     }
 };

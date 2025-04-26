@@ -1,5 +1,6 @@
 import { Request, Response, RequestHandler } from "express";
 import { Student } from "../models/Student";
+import { StudentScore } from "../models/StudentScore";
 
 export const getAllStudents: RequestHandler = async (
   req: Request,
