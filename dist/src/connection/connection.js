@@ -11,12 +11,12 @@ const Team_1 = require("../models/Team");
 const TeamScore_1 = require("../models/TeamScore");
 const TeamStats_1 = require("../models/TeamStats");
 const connection = new sequelize_typescript_1.Sequelize({
-    database: "motionlab_db",
+    database: process.env.DB_NAME,
     dialect: "mysql",
-    username: "root",
-    password: "C4rl0s2005!", //C4rl0s2005!
-    host: "localhost",
-    port: 3306,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    host: process.env.DB_HOST,
+    port: 5432,
     models: [
         Match_1.Match,
         Round_1.Round,

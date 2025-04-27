@@ -10,12 +10,12 @@ import { TeamScore } from "../models/TeamScore";
 import { TeamStats } from "../models/TeamStats";
 
 const connection = new Sequelize({
-  database: "motionlab_db",
+  database: process.env.DB_NAME,
   dialect: "mysql",
-  username: "root",
-  password: "C4rl0s2005!", //C4rl0s2005!
-  host: "localhost",
-  port: 3306,
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  host: process.env.DB_HOST,
+  port: 5432,
   models: [
     Match,
     Round,
