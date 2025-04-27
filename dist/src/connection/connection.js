@@ -10,13 +10,14 @@ const Teacher_1 = require("../models/Teacher");
 const Team_1 = require("../models/Team");
 const TeamScore_1 = require("../models/TeamScore");
 const TeamStats_1 = require("../models/TeamStats");
-const connection = new sequelize_typescript_1.Sequelize({
-    database: process.env.DB_NAME,
+const connection = new sequelize_typescript_1.Sequelize("postgresql://root:cuxeUrQh5JUH0SOBSfduIQDzPVYJeSWy@dpg-d06po7hr0fns73fsfklg-a.oregon-postgres.render.com/motionlab_db", {
     dialect: "postgres",
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    host: process.env.DB_HOST,
-    port: 5432,
+    dialectOptions: {
+        ssl: {
+            require: true,
+            rejectUnauthorized: false,
+        },
+    },
     models: [
         Match_1.Match,
         Round_1.Round,
@@ -33,7 +34,7 @@ const connection = new sequelize_typescript_1.Sequelize({
 async function connectionDB() {
     try {
         await connection.authenticate();
-        console.log("Conexión a MySQL establecida correctamente.");
+        console.log("Conexión a la base de datos establecida correctamente.");
         await connection.sync({ alter: true });
     }
     catch (error) {

@@ -9,31 +9,35 @@ import { Team } from "../models/Team";
 import { TeamScore } from "../models/TeamScore";
 import { TeamStats } from "../models/TeamStats";
 
-const connection = new Sequelize({
-  database: process.env.DB_NAME,
-  dialect: "postgres",
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  host: process.env.DB_HOST,
-  port: 5432,
-  models: [
-    Match,
-    Round,
-    Student,
-    StudentScore,
-    StudentTeam,
-    Teacher,
-    Team,
-    TeamScore,
-    TeamStats,
-  ],
-  logging: false,
-});
+const connection = new Sequelize(
+  "postgresql://root:cuxeUrQh5JUH0SOBSfduIQDzPVYJeSWy@dpg-d06po7hr0fns73fsfklg-a.oregon-postgres.render.com/motionlab_db",
+  {
+    dialect: "postgres",
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
+    },
+    models: [
+      Match,
+      Round,
+      Student,
+      StudentScore,
+      StudentTeam,
+      Teacher,
+      Team,
+      TeamScore,
+      TeamStats,
+    ],
+    logging: false,
+  }
+);
 
 async function connectionDB() {
   try {
     await connection.authenticate();
-    console.log("Conexión a MySQL establecida correctamente.");
+    console.log("Conexión a la base de datos establecida correctamente.");
     await connection.sync({ alter: true });
   } catch (error) {
     console.log("Error al conectar la base de datos:", error);
