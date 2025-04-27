@@ -12,7 +12,7 @@ const TeamScore_1 = require("../models/TeamScore");
 const TeamStats_1 = require("../models/TeamStats");
 const connection = new sequelize_typescript_1.Sequelize({
     database: process.env.DB_NAME,
-    dialect: "mysql",
+    dialect: "postgres",
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     host: process.env.DB_HOST,
