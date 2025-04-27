@@ -5,4 +5,6 @@ const teamRouter: Router = Router();
 
 teamRouter.patch("/:id", changeTeamStatus);
 
+teamRouter.post("/");
+
 export default teamRouter;

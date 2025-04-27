@@ -57,6 +57,15 @@ export const lobbyAccess: RequestHandler = async (
 ) => {
   const { code } = req.params;
 
+  if (!code) {
+    res.status(400).json({
+      status: "error",
+      message: "No se proporcionó el código de partida",
+      payload: null,
+    });
+    return;
+  }
+
   try {
     const match = await Match.findOne({
       where: {
@@ -77,7 +86,7 @@ export const lobbyAccess: RequestHandler = async (
     res.status(200).json({
       status: "success",
       message: "Codigo valido",
-      payload: { match_id: match.id },
+      payload: match,
     });
   } catch (error) {
     res.status(500).json({
