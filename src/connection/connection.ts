@@ -8,31 +8,30 @@ import { Teacher } from "../models/Teacher";
 import { Team } from "../models/Team";
 import { TeamScore } from "../models/TeamScore";
 import { TeamStats } from "../models/TeamStats";
+import dotenv from "dotenv";
+dotenv.config();
 
-const connection = new Sequelize(
-  "postgresql://root:cuxeUrQh5JUH0SOBSfduIQDzPVYJeSWy@dpg-d06po7hr0fns73fsfklg-a.oregon-postgres.render.com/motionlab_db",
-  {
-    dialect: "postgres",
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
+const connection = new Sequelize(process.env.DB_URL as string, {
+  dialect: "postgres",
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
     },
-    models: [
-      Match,
-      Round,
-      Student,
-      StudentScore,
-      StudentTeam,
-      Teacher,
-      Team,
-      TeamScore,
-      TeamStats,
-    ],
-    logging: false,
-  }
-);
+  },
+  models: [
+    Match,
+    Round,
+    Student,
+    StudentScore,
+    StudentTeam,
+    Teacher,
+    Team,
+    TeamScore,
+    TeamStats,
+  ],
+  logging: false,
+});
 
 async function connectionDB() {
   try {

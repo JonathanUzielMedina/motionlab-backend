@@ -1,4 +1,7 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_typescript_1 = require("sequelize-typescript");
 const Match_1 = require("../models/Match");
@@ -10,7 +13,9 @@ const Teacher_1 = require("../models/Teacher");
 const Team_1 = require("../models/Team");
 const TeamScore_1 = require("../models/TeamScore");
 const TeamStats_1 = require("../models/TeamStats");
-const connection = new sequelize_typescript_1.Sequelize("postgresql://root:cuxeUrQh5JUH0SOBSfduIQDzPVYJeSWy@dpg-d06po7hr0fns73fsfklg-a.oregon-postgres.render.com/motionlab_db", {
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+const connection = new sequelize_typescript_1.Sequelize(process.env.DB_URL, {
     dialect: "postgres",
     dialectOptions: {
         ssl: {
