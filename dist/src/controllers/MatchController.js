@@ -58,7 +58,7 @@ const getMatchesByTeacherId = async (req, res) => {
         const matches = await Match_1.Match.findAll({
             where: {
                 teacher_id: teacherId,
-            }
+            },
         });
         res.status(200).json({
             message: "Partidas del profesor obtenidas exitosamente",
@@ -87,6 +87,10 @@ const createMatch = async (req, res) => {
             return;
         }
         const match = { ...req.body };
+        match.code = Math.random().toString(36).substr(2, 8).toUpperCase();
+        match.active = true;
+        match.start_time = new Date();
+        match.end_time = null;
         const data = await Match_1.Match.create(match);
         res.status(200).json({
             message: "Partida creada correctamente",
