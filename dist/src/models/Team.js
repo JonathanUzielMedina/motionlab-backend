@@ -54,7 +54,7 @@ __decorate([
     __metadata("design:type", TeamStats_1.TeamStats)
 ], Team.prototype, "team_stats", void 0);
 __decorate([
-    (0, sequelize_typescript_1.HasMany)(() => StudentTeam_1.StudentTeam),
+    (0, sequelize_typescript_1.HasMany)(() => StudentTeam_1.StudentTeam, { onDelete: "CASCADE" }),
     __metadata("design:type", Array)
 ], Team.prototype, "studentTeams", void 0);
 exports.Team = Team = __decorate([
