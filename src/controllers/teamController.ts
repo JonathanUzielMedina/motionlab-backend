@@ -40,7 +40,7 @@ export const createTeam: RequestHandler = async (
 ) => {
   const { match_id } = req.body;
   if (!match_id) {
-    res.status(500).json({
+    res.status(400).json({
       message: "El body esta vacio",
       payload: null,
       status: "error",
@@ -70,14 +70,16 @@ export const createTeam: RequestHandler = async (
       });
       return;
     }
-    const team = { ...match_id };
-    team.ready = false;
-    const data: Team = await Team.create(team);
+    const team = {
+      match_id: match_id,
+      ready: false,
+    };
+    const newTeam: Team = await Team.create(team);
 
     res.status(200).json({
       message: "Equipo creado correctamente",
       status: "success",
-      payload: { team_id: data.id },
+      payload: { team_id: newTeam.id },
     });
   } catch (error) {
     res.status(500).json({
