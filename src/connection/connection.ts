@@ -8,14 +8,17 @@ import { Teacher } from "../models/Teacher";
 import { Team } from "../models/Team";
 import { TeamScore } from "../models/TeamScore";
 import { TeamStats } from "../models/TeamStats";
+import dotenv from "dotenv";
+dotenv.config();
 
-const connection = new Sequelize({
-  database: process.env.DB_NAME,
+const connection = new Sequelize(process.env.DB_URL as string, {
   dialect: "postgres",
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  host: process.env.DB_HOST,
-  port: 5432,
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  },
   models: [
     Match,
     Round,
@@ -33,7 +36,7 @@ const connection = new Sequelize({
 async function connectionDB() {
   try {
     await connection.authenticate();
-    console.log("Conexión a MySQL establecida correctamente.");
+    console.log("Conexión a la base de datos establecida correctamente.");
     await connection.sync({ alter: true });
   } catch (error) {
     console.log("Error al conectar la base de datos:", error);
