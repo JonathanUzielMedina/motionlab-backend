@@ -2,6 +2,20 @@ import { Request, Response, RequestHandler } from "express";
 import { StudentScore } from "../models/StudentScore";
 import { Student } from "../models/Student";
 
+type StudentResult = {
+  student_id: string;
+  time: number;
+  distance: number;
+};
+
+type Score = {
+  student_id: string;
+  round_id: number;
+  score: number;
+  time: number;
+  position: number;
+};
+
 // Obtener los scores de un estudiante por ID de ronda
 export const getStudentScoresById: RequestHandler = async (
   req: Request,
@@ -37,6 +51,65 @@ export const getStudentScoresById: RequestHandler = async (
       message: "Error en el servidor",
       payload: null,
       status: "error",
+    });
+  }
+};
+
+export const createStudentScores: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  if (!req.body) {
+    res.status(400).json({
+      message: "El body estaba vacio",
+      status: "error",
+      payload: null,
+    });
+    return;
+  }
+  const { results, roundId }: { results: StudentResult[]; roundId: number } =
+    req.body;
+
+  try {
+    const scores: Score[] = [];
+    results.forEach((result) => {
+      const score = (result.distance / result.time) * 1000;
+      scores.push({
+        score: score,
+        student_id: result.student_id,
+        round_id: roundId,
+        time: result.time,
+        position: 0,
+      });
+    });
+
+    await StudentScore.bulkCreate(scores, { validate: true });
+
+    const allScores = await StudentScore.findAll({
+      where: { round_id: roundId },
+    });
+
+    const sortedScores = allScores.sort((a, b) => b.score - a.score);
+
+    // Asignamos posición
+    await Promise.all(
+      sortedScores.map(async (scoreEntry, index) => {
+        scoreEntry.position = index + 1;
+        await scoreEntry.save();
+      })
+    );
+
+    res.status(200).json({
+      message:
+        "Nuevos puntajes calculados correctamente y posiciones actualizadas",
+      status: "success",
+      payload: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error en el servidor " + error,
+      status: "error",
+      payload: null,
     });
   }
 };

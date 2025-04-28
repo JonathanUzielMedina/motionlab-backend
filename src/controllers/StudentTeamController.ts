@@ -42,6 +42,7 @@ export const getStudentTeamById: RequestHandler = async (
   }
 };
 
+// Hay que juntar esta con la de create student
 export const registerStudents: RequestHandler = async (
   req: Request,
   res: Response
