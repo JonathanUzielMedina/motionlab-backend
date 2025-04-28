@@ -1,6 +1,8 @@
 import { Request, Response, RequestHandler } from "express";
 import { Teacher } from "../models/Teacher";
 
+
+//crear un nuevo profesor
 export const createTeacher: RequestHandler = async (
   req: Request,
   res: Response
@@ -32,6 +34,7 @@ export const createTeacher: RequestHandler = async (
   }
 };
 
+//obtener todos los profesores
 export const getAllTeachers: RequestHandler = async (
   req: Request,
   res: Response
@@ -47,6 +50,36 @@ export const getAllTeachers: RequestHandler = async (
     res.status(200).json({
       payload: null,
       message: "Hubo un error en el servidor.",
+      status: "error",
+    });
+  }
+};
+
+//obtener un profesor por id
+export const getTeacherbyId: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { id } = req.params;
+    const data: Teacher | null = await Teacher.findByPk(id);
+    if (!data) {
+      res.status(404).json({
+        message: "Profesor no encontrado",
+        payload: null,
+        status: "error",
+      });
+      return;
+    }
+    res.status(200).json({
+      message: "Profesor recuperado exitosamente",
+      payload: data,
+      status: "success",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error en el servidor",
+      payload: null,
       status: "error",
     });
   }
