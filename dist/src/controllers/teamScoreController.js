@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getTeamScoreById = void 0;
 const Team_1 = require("../models/Team");
 const TeamScore_1 = require("../models/TeamScore");
+// Obtener los scores de un equipo por ID de ronda
 const getTeamScoreById = async (req, res) => {
     try {
         const { id } = req.params;

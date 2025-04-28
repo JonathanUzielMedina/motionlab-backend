@@ -30,6 +30,8 @@ export const createStudent: RequestHandler = async (
   res: Response
 ) => {
   try {
+    const studentIds: string[] = req.body;
+
     if (!req.body) {
       res.status(500).json({
         message: "Nada le fue enviado al servidor",
@@ -39,12 +41,21 @@ export const createStudent: RequestHandler = async (
       return;
     }
 
-    const student = { ...req.body };
-    const data: Student = await Student.create(student);
-
+    studentIds.forEach(async (id) => {
+      const student = await Student.findByPk(id);
+      if (!student) {
+        await Student.create({
+          id: id,
+          played_rounds: 0,
+          average_time: 0,
+          average_match_position: 0,
+          average_historic_position: 0,
+        });
+      }
+    });
     res.status(200).json({
       message: "Estudiante creado correctamente",
-      payload: data,
+      payload: null,
       status: "success",
     });
   } catch (error) {

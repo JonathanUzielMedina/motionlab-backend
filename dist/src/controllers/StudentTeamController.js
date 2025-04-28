@@ -39,6 +39,7 @@ const getStudentTeamById = async (req, res) => {
     }
 };
 exports.getStudentTeamById = getStudentTeamById;
+// Hay que juntar esta con la de create student
 const registerStudents = async (req, res) => {
     const { student_ids, team_id } = req.body;
     try {

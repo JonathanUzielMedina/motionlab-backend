@@ -1,8 +1,13 @@
 import { Router } from "express";
-import { getStudentTeamById } from "../controllers/StudentTeamController";
+import {
+  getStudentTeamById,
+  registerStudents,
+} from "../controllers/StudentTeamController";
 
-const studentScoreRouter: Router = Router();
+const studentTeamRouter: Router = Router();
 
-studentScoreRouter.get("/:id", getStudentTeamById);
+studentTeamRouter.get("/:id", getStudentTeamById);
 
-export default studentScoreRouter;
+studentTeamRouter.post("/", registerStudents);
+
+export default studentTeamRouter;

@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllTeachers = exports.createTeacher = void 0;
+exports.getTeacherbyId = exports.getAllTeachers = exports.createTeacher = void 0;
 const Teacher_1 = require("../models/Teacher");
+//crear un nuevo profesor
 const createTeacher = async (req, res) => {
     try {
         if (!req.body) {
@@ -29,6 +30,7 @@ const createTeacher = async (req, res) => {
     }
 };
 exports.createTeacher = createTeacher;
+//obtener todos los profesores
 const getAllTeachers = async (req, res) => {
     try {
         const data = await Teacher_1.Teacher.findAll();
@@ -47,3 +49,31 @@ const getAllTeachers = async (req, res) => {
     }
 };
 exports.getAllTeachers = getAllTeachers;
+//obtener un profesor por id
+const getTeacherbyId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const data = await Teacher_1.Teacher.findByPk(id);
+        if (!data) {
+            res.status(404).json({
+                message: "Profesor no encontrado",
+                payload: null,
+                status: "error",
+            });
+            return;
+        }
+        res.status(200).json({
+            message: "Profesor recuperado exitosamente",
+            payload: data,
+            status: "success",
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "Error en el servidor",
+            payload: null,
+            status: "error",
+        });
+    }
+};
+exports.getTeacherbyId = getTeacherbyId;
