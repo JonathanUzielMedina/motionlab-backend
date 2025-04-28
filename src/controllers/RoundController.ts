@@ -78,3 +78,26 @@ export const getRoundById: RequestHandler = async (
     });
   }
 };
+
+export const createRound: RequestHandler = async (
+    req: Request,
+    res: Response
+) => {
+  try {
+    const { match_id } = req.body;
+    const newRound = await Round.create({match_id});
+
+    res.status(201).json({
+      message: "Ronda creada exitosamente",
+      payload: newRound,
+      status: "success",
+    });
+  } catch (error) {
+    console.error("Error al crear la ronda:", error);
+    res.status(500).json({
+      message: "Error en el servidor",
+      payload: null,
+      status: "error",
+    });
+  }
+}
