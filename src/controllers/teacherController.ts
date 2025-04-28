@@ -55,32 +55,3 @@ export const getAllTeachers: RequestHandler = async (
   }
 };
 
-//obtener un profesor por id
-export const getTeacherbyId: RequestHandler = async (
-  req: Request,
-  res: Response
-) => {
-  try {
-    const { id } = req.params;
-    const data: Teacher | null = await Teacher.findByPk(id);
-    if (!data) {
-      res.status(404).json({
-        message: "Profesor no encontrado",
-        payload: null,
-        status: "error",
-      });
-      return;
-    }
-    res.status(200).json({
-      message: "Profesor recuperado exitosamente",
-      payload: data,
-      status: "success",
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: "Error en el servidor",
-      payload: null,
-      status: "error",
-    });
-  }
-};
