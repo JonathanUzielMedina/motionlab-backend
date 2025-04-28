@@ -2,6 +2,8 @@ import { Request, Response, RequestHandler } from "express";
 import { StudentTeam } from "../models/StudentTeam";
 import { Student } from "../models/Student";
 import { Team } from "../models/Team";
+
+// Obtener los estudiantes de un equipo por ID de equipo
 export const getStudentTeamById: RequestHandler = async (
     req: Request,
     res: Response

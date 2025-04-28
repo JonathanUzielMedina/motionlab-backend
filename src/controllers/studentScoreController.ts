@@ -2,6 +2,7 @@ import { Request, Response, RequestHandler } from "express";
 import { StudentScore } from "../models/StudentScore";
 import { Student } from "../models/Student";
 
+// Obtener los scores de un estudiante por ID de ronda
 export const getStudentScoresById: RequestHandler = async (
   req: Request,
   res: Response
