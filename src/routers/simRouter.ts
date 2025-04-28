@@ -1,7 +1,8 @@
 import { Router } from "express";
+import { calculateSimulation } from "../controllers/simController";
 
 const simRouter: Router = Router();
 
-simRouter.post("/:id");
+simRouter.post("/", calculateSimulation);
 
 export default simRouter;

@@ -49,6 +49,14 @@ const getLobbyTeams = async (req, res) => {
 exports.getLobbyTeams = getLobbyTeams;
 const lobbyAccess = async (req, res) => {
     const { code } = req.params;
+    if (!code) {
+        res.status(400).json({
+            status: "error",
+            message: "No se proporcionó el código de partida",
+            payload: null,
+        });
+        return;
+    }
     try {
         const match = await Match_1.Match.findOne({
             where: {
@@ -67,7 +75,7 @@ const lobbyAccess = async (req, res) => {
         res.status(200).json({
             status: "success",
             message: "Codigo valido",
-            payload: { match_id: match.id },
+            payload: match,
         });
     }
     catch (error) {
