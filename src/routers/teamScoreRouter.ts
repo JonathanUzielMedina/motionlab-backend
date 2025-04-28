@@ -5,4 +5,5 @@ const teamScoreRouter: Router = Router();
 
 teamScoreRouter.get("/:id", getTeamScoreById);
 
+
 export default teamScoreRouter;
