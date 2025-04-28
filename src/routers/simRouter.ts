@@ -3,6 +3,6 @@ import { calculateSimulation } from "../controllers/simController";
 
 const simRouter: Router = Router();
 
-simRouter.post("/:id", calculateSimulation);
+simRouter.post("/", calculateSimulation);
 
 export default simRouter;
