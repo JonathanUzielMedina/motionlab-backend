@@ -2,6 +2,8 @@ import { Request, Response, RequestHandler } from "express";
 import { Team } from "../models/Team";
 import { TeamScore } from "../models/TeamScore";
 
+
+// Obtener los scores de un equipo por ID de ronda
 export const getTeamScoreById: RequestHandler = async (
   req: Request,
   res: Response
