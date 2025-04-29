@@ -9,8 +9,10 @@ import {
 } from "sequelize-typescript";
 import { Round } from "./Round";
 import { Team } from "./Team";
+import { Optional } from "sequelize";
 
 interface TeamScoreAttributes {
+  id: number;
   team_id: number;
   round_id: number;
   score: number;
@@ -18,7 +20,8 @@ interface TeamScoreAttributes {
   position: number;
 }
 
-interface TeamScoreCreationAttributes extends TeamScoreAttributes {}
+interface TeamScoreCreationAttributes
+  extends Optional<TeamScoreAttributes, "id"> {}
 
 @Table({
   tableName: "team_scores",
