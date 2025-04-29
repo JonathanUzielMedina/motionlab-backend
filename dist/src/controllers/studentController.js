@@ -65,58 +65,147 @@ const createStudent = async (req, res) => {
 exports.createStudent = createStudent;
 const updateStudentStats = async (studentIds, matchId) => {
     try {
-        const rounds = await Round_1.Round.findAll({
-            where: { match_id: matchId },
-        });
-        const roundIds = rounds.map((r) => r.dataValues.id);
-        for (const student_id of studentIds) {
-            const allScores = await StudentScore_1.StudentScore.findAll({
-                where: { student_id: student_id },
+        console.log(`Starting to update stats for ${studentIds.length} students in match ${matchId}`);
+        for (const id of studentIds) {
+            console.log(`Processing student ID: ${id}`);
+            const newStat = {};
+            // Get all scores for this student (for historical average)
+            const allStudentScores = await StudentScore_1.StudentScore.findAll({
+                where: { student_id: id },
             });
+            console.log(`Found ${allStudentScores.length} total scores for student ${id}`);
+            if (allStudentScores.length === 0) {
+                console.log(`No scores found for student ${id}. Skipping stats calculation.`);
+                continue; // Skip this student since there's no data to calculate stats from
+            }
+            const playedRounds = allStudentScores.length;
+            newStat.played_rounds = playedRounds;
+            console.log(`Setting played_rounds to ${playedRounds}`);
+            // Calculate historical average time
+            const totalTime = allStudentScores.reduce((sum, score) => {
+                console.log(`Score.dsez.time ${score.dataValues.time}`);
+                return sum + (score.dataValues.time || 0); // Handle potential null/undefined times
+            }, 0);
+            console.log(`totalTime ${totalTime}`);
+            newStat.average_time = parseFloat((totalTime / playedRounds).toFixed(2));
+            console.log(`Setting average_time to ${newStat.average_time}`);
+            // Calculate historical average position
+            const positionSum = allStudentScores.reduce((sum, score) => {
+                console.log(`Score.datavalues.position ${score.dataValues.position}`);
+                return sum + (score.dataValues.position || 0); // Handle potential null/undefined positions
+            }, 0);
+            console.log(`positionSum ${positionSum}`);
+            newStat.average_historic_position = Math.ceil(positionSum / playedRounds);
+            console.log(`Setting average_historic_position to ${newStat.average_historic_position}`);
+            // Get only scores for this student in THIS match
             const matchScores = await StudentScore_1.StudentScore.findAll({
-                where: {
-                    student_id: student_id,
-                    round_id: roundIds,
-                },
+                where: { student_id: id },
+                include: [
+                    {
+                        model: Round_1.Round,
+                        where: { match_id: matchId },
+                        required: true, // Ensures inner join
+                    },
+                ],
             });
-            const played_rounds = allScores.length;
-            // Get total time with proper data access and validation
-            const total_time = allScores.reduce((acc, score) => {
-                const time = score.dataValues.time || 0;
-                return acc + parseFloat(time.toString());
-            }, 0);
-            // Calculate average time with validation
-            const average_time = played_rounds > 0 ? total_time / played_rounds : 0;
-            // Get total historic position with proper data access and validation
-            const total_historic_position = allScores.reduce((acc, score) => {
-                const position = score.dataValues.position || 0;
-                return acc + parseInt(position.toString(), 10);
-            }, 0);
-            // Calculate average historic position with validation
-            const average_historic_position = played_rounds > 0 ? total_historic_position / played_rounds : 0;
-            // Get total match position with proper data access and validation
-            const total_match_position = matchScores.reduce((acc, score) => {
-                const position = score.dataValues.position || 0;
-                return acc + parseInt(position.toString(), 10);
-            }, 0);
-            // Calculate average match position with validation
-            const average_match_position = matchScores.length > 0 ? total_match_position / matchScores.length : 0;
-            // Check and handle NaN values before updating
-            await Student_1.Student.update({
-                played_rounds,
-                average_time: isNaN(average_time) ? 0 : average_time,
-                average_historic_position: isNaN(average_historic_position)
-                    ? 0
-                    : Math.round(average_historic_position * 100) / 100,
-                average_match_position: isNaN(average_match_position)
-                    ? 0
-                    : Math.round(average_match_position * 100) / 100,
-            }, { where: { id: student_id } });
+            console.log(`Found ${matchScores.length} scores for student ${id} in match ${matchId}`);
+            const matchPlayedRounds = matchScores.length;
+            // Calculate match average position (only if they played in this match)
+            if (matchPlayedRounds > 0) {
+                const positionSumMatch = matchScores.reduce((sum, score) => {
+                    console.log(`Score.datavalues.position ${score.dataValues.position}`);
+                    return sum + (score.dataValues.position || 0);
+                }, 0);
+                newStat.average_match_position = Math.ceil(positionSumMatch / matchPlayedRounds);
+                console.log(`Setting average_match_position to ${newStat.average_match_position}`);
+            }
+            else {
+                // If student hasn't played in this match, we'll set a default value
+                newStat.average_match_position = 0;
+                console.log(`No match scores found, setting average_match_position to 0`);
+            }
+            // Log what we're about to update
+            console.log(`Updating student ${id} with stats:`, newStat);
+            // Check if newStat has any properties to update
+            if (Object.keys(newStat).length === 0) {
+                console.log(`No stats to update for student ${id}`);
+                continue;
+            }
+            // Update the student record and get the result
+            const [updatedRows] = await Student_1.Student.update(newStat, {
+                where: { id: id },
+            });
+            if (updatedRows === 0) {
+                console.log(`Warning: Student with ID ${id} not found or no changes made`);
+                // Verify the student exists
+                const studentExists = await Student_1.Student.findByPk(id);
+                if (!studentExists) {
+                    console.log(`Student with ID ${id} does not exist in the database!`);
+                }
+                else {
+                    console.log(`Student exists but no rows were updated. Current values might be the same.`);
+                }
+            }
+            else {
+                console.log(`Successfully updated ${updatedRows} rows for student ${id}`);
+                // Verify the update by fetching the student again
+                const updatedStudent = await Student_1.Student.findByPk(id);
+                console.log(`Updated student values:`, updatedStudent);
+            }
         }
+        return { success: true, message: "Student stats update process completed" };
     }
     catch (error) {
         console.log("Error updating student stats:");
         console.error(error);
+        return { success: false, message: "Failed to update student stats", error };
     }
 };
 exports.updateStudentStats = updateStudentStats;
+// export const updateStudentStats = async (
+//   studentIds: string[],
+//   matchId: number
+// ) => {
+//   try {
+//     for (const id of studentIds) {
+//       const newStat: NewStats = {};
+//       const studentScores = await StudentScore.findAll({
+//         where: { student_id: id },
+//       });
+//       const playedRounds = studentScores.length;
+//       newStat.played_rounds = playedRounds;
+//       const totalTime = studentScores.reduce((sum, value) => {
+//         return sum + value.time;
+//       }, 0);
+//       const averageTime = totalTime / playedRounds;
+//       newStat.average_time = averageTime;
+//       const positionSum = studentScores.reduce((sum, value) => {
+//         return sum + value.position;
+//       }, 0);
+//       const averageHistoricPosition = positionSum / playedRounds;
+//       newStat.average_historic_position = averageHistoricPosition;
+//       const scores = await StudentScore.findAll({
+//         include: [
+//           {
+//             model: Round,
+//             where: { match_id: matchId },
+//             attributes: [],
+//           },
+//         ],
+//       });
+//       const positionSumMatch = scores.reduce((sum, value) => {
+//         return sum + value.position;
+//       }, 0);
+//       const averageMatchPosition = positionSumMatch / playedRounds;
+//       newStat.average_match_position = averageMatchPosition;
+//       await Student.update(newStat, {
+//         where: {
+//           id: id,
+//         },
+//       });
+//     }
+//   } catch (error) {
+//     console.log("Error updating student stats:");
+//     console.error(error);
+//   }
+// };

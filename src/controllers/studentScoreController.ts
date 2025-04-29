@@ -3,6 +3,7 @@ import { StudentScore } from "../models/StudentScore";
 import { Student } from "../models/Student";
 import { Round } from "../models/Round";
 import { updateStudentStats } from "./studentController";
+import { Match } from "../models/Match";
 
 type StudentResult = {
   student_id: string;
@@ -92,8 +93,14 @@ export const createStudentScores: RequestHandler = async (
   }
   const { results, roundId }: { results: StudentResult[]; roundId: number } =
     req.body;
-  const match = await Round.findByPk(roundId);
-  if (!match) {
+  const round = await Round.findByPk(roundId, {
+    include: [
+      {
+        model: Match,
+      },
+    ],
+  });
+  if (!round) {
     res.status(404).json({
       message: "Round no encontrado",
       status: "error",
@@ -101,7 +108,7 @@ export const createStudentScores: RequestHandler = async (
     });
     return;
   }
-  const matchId = match.dataValues.id;
+  const matchId = round.dataValues.match_id;
   try {
     const scores: Score[] = [];
     const studentsIds: string[] = [];

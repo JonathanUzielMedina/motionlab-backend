@@ -5,6 +5,7 @@ const StudentScore_1 = require("../models/StudentScore");
 const Student_1 = require("../models/Student");
 const Round_1 = require("../models/Round");
 const studentController_1 = require("./studentController");
+const Match_1 = require("../models/Match");
 const getAllStudentScore = async (req, res) => {
     try {
         const studentScores = await StudentScore_1.StudentScore.findAll();
@@ -68,8 +69,14 @@ const createStudentScores = async (req, res) => {
         return;
     }
     const { results, roundId } = req.body;
-    const match = await Round_1.Round.findByPk(roundId);
-    if (!match) {
+    const round = await Round_1.Round.findByPk(roundId, {
+        include: [
+            {
+                model: Match_1.Match,
+            },
+        ],
+    });
+    if (!round) {
         res.status(404).json({
             message: "Round no encontrado",
             status: "error",
@@ -77,7 +84,7 @@ const createStudentScores = async (req, res) => {
         });
         return;
     }
-    const matchId = match.dataValues.id;
+    const matchId = round.dataValues.match_id;
     try {
         const scores = [];
         const studentsIds = [];
