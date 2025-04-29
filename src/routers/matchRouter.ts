@@ -1,4 +1,3 @@
-import { match } from "assert";
 import { Router } from "express";
 import { getAllMatches,createMatch,getMatchById,getMatchesByTeacherId } from "../controllers/MatchController";
 
