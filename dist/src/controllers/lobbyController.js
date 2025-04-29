@@ -91,7 +91,9 @@ const deleteTeamFromLobby = async (req, res) => {
     const { id } = req.params;
     try {
         await Team_1.Team.destroy({
-            where: {},
+            where: {
+                id: id,
+            },
         });
         res.status(200).json({
             status: "success",

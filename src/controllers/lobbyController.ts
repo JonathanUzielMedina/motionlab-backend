@@ -105,7 +105,7 @@ export const deleteTeamFromLobby: RequestHandler = async (
   try {
     await Team.destroy({
       where: {
-        
+        id: id,
       },
     });
 
