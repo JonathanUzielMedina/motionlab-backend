@@ -75,7 +75,7 @@ const lobbyAccess = async (req, res) => {
         res.status(200).json({
             status: "success",
             message: "Codigo valido",
-            payload: match.id,
+            payload: match,
         });
     }
     catch (error) {

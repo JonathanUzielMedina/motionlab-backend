@@ -1,36 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createTeam = exports.changeTeamStatus = void 0;
+exports.getAllTeams = exports.createTeam = exports.changeTeamStatus = void 0;
 const Team_1 = require("../models/Team");
 const TeamStats_1 = require("../models/TeamStats");
 const Match_1 = require("../models/Match");
 //actualizar el estado del equipo por id a listo
-const changeTeamStatus = async (req, res) => {
-    const { id } = req.params;
+const changeTeamStatus = async (id) => {
     try {
         const team = await Team_1.Team.findByPk(id);
         if (!team) {
-            res.status(404).json({
-                message: "Equipo no encontrado",
-                status: "error",
-                payload: null,
-            });
+            console.log("No existe este equipo");
             return;
         }
-        team.ready = true;
-        await team.save();
-        res.status(200).json({
-            message: "Estado del equipo actualizado correctamente",
-            status: "success",
-            payload: null,
-        });
+        await team.update({ ready: true });
     }
     catch (error) {
-        res.status(500).json({
-            message: "Problemas en el servidor",
-            status: "error",
-            payload: null,
-        });
+        console.log(error);
     }
 };
 exports.changeTeamStatus = changeTeamStatus;
@@ -91,3 +76,21 @@ const createTeam = async (req, res) => {
     }
 };
 exports.createTeam = createTeam;
+const getAllTeams = async (req, res) => {
+    try {
+        const teams = await Team_1.Team.findAll();
+        res.status(200).json({
+            message: "Equipos obtenidos correctamente",
+            payload: teams,
+            status: "success",
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "Error en el servidor",
+            payload: null,
+            status: "error",
+        });
+    }
+};
+exports.getAllTeams = getAllTeams;

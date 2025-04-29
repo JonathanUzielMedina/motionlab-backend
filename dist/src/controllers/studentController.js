@@ -4,6 +4,8 @@ exports.updateStudentStats = exports.createStudent = exports.getAllStudents = vo
 const Student_1 = require("../models/Student");
 const StudentScore_1 = require("../models/StudentScore");
 const Round_1 = require("../models/Round");
+const StudentTeamController_1 = require("./StudentTeamController");
+const teamController_1 = require("./teamController");
 //obtener todos los estudiantes
 const getAllStudents = async (req, res) => {
     try {
@@ -25,7 +27,8 @@ const getAllStudents = async (req, res) => {
 exports.getAllStudents = getAllStudents;
 //crear un estudiante
 const createStudent = async (req, res) => {
-    if (!Array.isArray(req.body)) {
+    const { ids, team_id } = req.body;
+    if (!Array.isArray(ids)) {
         res.status(400).json({
             message: "El cuerpo de la solicitud debe ser un arreglo de IDs",
             payload: null,
@@ -33,7 +36,7 @@ const createStudent = async (req, res) => {
         });
         return;
     }
-    const studentIds = req.body;
+    const studentIds = ids;
     try {
         await Promise.all(studentIds.map(async (id) => {
             const student = await Student_1.Student.findByPk(id);
@@ -47,6 +50,8 @@ const createStudent = async (req, res) => {
                 });
             }
         }));
+        (0, StudentTeamController_1.registerStudents)(studentIds, team_id);
+        (0, teamController_1.changeTeamStatus)(team_id);
         res.status(200).json({
             message: "Estudiantes creados correctamente (si no existían)",
             payload: null,

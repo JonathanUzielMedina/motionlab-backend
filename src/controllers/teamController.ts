@@ -4,39 +4,24 @@ import { TeamStats } from "../models/TeamStats";
 import { Match } from "../models/Match";
 
 //actualizar el estado del equipo por id a listo
-export const changeTeamStatus: RequestHandler = async (
-  req: Request,
-  res: Response
-) => {
-  const { id } = req.params;
+export const changeTeamStatus = async (id: number) => {
   try {
     const team = await Team.findByPk(id);
     if (!team) {
-      res.status(404).json({
-        message: "Equipo no encontrado",
-        status: "error",
-        payload: null,
-      });
+      console.log("No existe este equipo");
       return;
     }
-    team.ready = true;
-    await team.save();
 
-    res.status(200).json({
-      message: "Estado del equipo actualizado correctamente",
-      status: "success",
-      payload: null,
-    });
+    await team.update({ ready: true });
   } catch (error) {
-    res.status(500).json({
-      message: "Problemas en el servidor",
-      status: "error",
-      payload: null,
-    });
+    console.log(error);
   }
 };
 
-export const createTeam: RequestHandler = async (req: Request, res: Response) => {
+export const createTeam: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
   const { match_id } = req.body;
 
   if (!match_id) {
@@ -91,6 +76,26 @@ export const createTeam: RequestHandler = async (req: Request, res: Response) =>
     });
   } catch (error) {
     console.error("Error en createTeam:", error);
+    res.status(500).json({
+      message: "Error en el servidor",
+      payload: null,
+      status: "error",
+    });
+  }
+};
+
+export const getAllTeams: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const teams = await Team.findAll();
+    res.status(200).json({
+      message: "Equipos obtenidos correctamente",
+      payload: teams,
+      status: "success",
+    });
+  } catch (error) {
     res.status(500).json({
       message: "Error en el servidor",
       payload: null,

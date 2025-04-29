@@ -8,6 +8,5 @@ const studentTeamRouter: Router = Router();
 
 studentTeamRouter.get("/:id", getStudentsByTeamId);
 
-studentTeamRouter.post("/", registerStudents);
 
 export default studentTeamRouter;

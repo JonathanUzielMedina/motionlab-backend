@@ -3,6 +3,8 @@ import { Student } from "../models/Student";
 import { StudentScore } from "../models/StudentScore";
 import { Round } from "../models/Round";
 import { Match } from "../models/Match";
+import { registerStudents } from "./StudentTeamController";
+import { changeTeamStatus } from "./teamController";
 
 type NewStats = {
   played_rounds?: number;
@@ -37,7 +39,8 @@ export const createStudent: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  if (!Array.isArray(req.body)) {
+  const { ids, team_id } = req.body;
+  if (!Array.isArray(ids)) {
     res.status(400).json({
       message: "El cuerpo de la solicitud debe ser un arreglo de IDs",
       payload: null,
@@ -46,7 +49,7 @@ export const createStudent: RequestHandler = async (
     return;
   }
 
-  const studentIds: string[] = req.body;
+  const studentIds: string[] = ids;
 
   try {
     await Promise.all(
@@ -63,7 +66,8 @@ export const createStudent: RequestHandler = async (
         }
       })
     );
-
+    registerStudents(studentIds, team_id);
+    changeTeamStatus(team_id);
     res.status(200).json({
       message: "Estudiantes creados correctamente (si no existían)",
       payload: null,
@@ -127,9 +131,7 @@ export const updateStudentStats = async (
         return sum + (score.dataValues.position || 0); // Handle potential null/undefined positions
       }, 0);
       console.log(`positionSum ${positionSum}`);
-      newStat.average_historic_position = Math.ceil(
-        positionSum / playedRounds
-      );
+      newStat.average_historic_position = Math.ceil(positionSum / playedRounds);
       console.log(
         `Setting average_historic_position to ${newStat.average_historic_position}`
       );

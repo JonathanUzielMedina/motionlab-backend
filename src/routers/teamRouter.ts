@@ -1,10 +1,14 @@
 import { Router } from "express";
-import { changeTeamStatus, createTeam } from "../controllers/teamController";
+import {
+  changeTeamStatus,
+  createTeam,
+  getAllTeams,
+} from "../controllers/teamController";
 
 const teamRouter: Router = Router();
 
-teamRouter.patch("/:id", changeTeamStatus);
-
 teamRouter.post("/", createTeam);
+
+teamRouter.get("/", getAllTeams);
 
 export default teamRouter;

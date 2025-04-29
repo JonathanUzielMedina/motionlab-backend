@@ -4,11 +4,10 @@ import { Student } from "../models/Student";
 import { Team } from "../models/Team";
 
 // Hay que juntar esta con la de create student
-export const registerStudents: RequestHandler = async (
-  req: Request,
-  res: Response
+export const registerStudents = async (
+  student_ids: string[],
+  team_id: number
 ) => {
-  const { student_ids, team_id } = req.body;
   try {
     student_ids.forEach(async (id: string) => {
       const newStudentTeam = await StudentTeam.create({
@@ -16,18 +15,8 @@ export const registerStudents: RequestHandler = async (
         id_team: team_id,
       });
     });
-
-    res.status(200).json({
-      message: "Alumnos asignados correctamente a un equipo",
-      status: "Success",
-      payload: null,
-    });
   } catch (error) {
-    res.status(500).json({
-      message: "Error en el servidor" + error,
-      status: "Error",
-      payload: null,
-    });
+    console.log(error)
   }
 };
 
