@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllTeachers = exports.createTeacher = void 0;
 const Teacher_1 = require("../models/Teacher");
+//crear un nuevo profesor
 const createTeacher = async (req, res) => {
     try {
         if (!req.body) {
@@ -29,6 +30,7 @@ const createTeacher = async (req, res) => {
     }
 };
 exports.createTeacher = createTeacher;
+//obtener todos los profesores
 const getAllTeachers = async (req, res) => {
     try {
         const data = await Teacher_1.Teacher.findAll();

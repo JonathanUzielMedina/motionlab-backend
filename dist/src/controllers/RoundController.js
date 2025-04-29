@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRoundById = exports.getAllRounds = void 0;
+exports.createRound = exports.getRoundById = exports.getAllRounds = void 0;
 const Round_1 = require("../models/Round");
 const TeamScore_1 = require("../models/TeamScore");
 const StudentScore_1 = require("../models/StudentScore");
@@ -73,3 +73,23 @@ const getRoundById = async (req, res) => {
     }
 };
 exports.getRoundById = getRoundById;
+const createRound = async (req, res) => {
+    try {
+        const { match_id } = req.body;
+        const newRound = await Round_1.Round.create({ match_id });
+        res.status(201).json({
+            message: "Ronda creada exitosamente",
+            payload: newRound,
+            status: "success",
+        });
+    }
+    catch (error) {
+        console.error("Error al crear la ronda:", error);
+        res.status(500).json({
+            message: "Error en el servidor",
+            payload: null,
+            status: "error",
+        });
+    }
+};
+exports.createRound = createRound;

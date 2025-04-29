@@ -9,6 +9,8 @@ import lobbyRouter from "./lobbyRouter";
 import teamRouter from "./teamRouter";
 import simRouter from "./simRouter";
 import matchRouter from "./matchRouter";
+import roundRouter from "./RoundRouter";
+import studentTeamRouter from "./StudentTeamRouter";
 const apiRouter: Router = Router();
 
 apiRouter.use("/auth", authRouter);
@@ -21,6 +23,8 @@ apiRouter.use("/lobby", lobbyRouter);
 apiRouter.use("/team", teamRouter);
 apiRouter.use("/sim", simRouter);
 apiRouter.use("/match", matchRouter);
+apiRouter.use("/round", roundRouter);
+apiRouter.use("/st", studentTeamRouter);
 
 apiRouter.get("/", (req: Request, res: Response) => {
   res.send("Api Root");

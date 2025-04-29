@@ -74,7 +74,6 @@ export class Match extends Model<MatchAttributes, MatchCreationAttributes> {
   @Column({
     type: DataType.BOOLEAN,
     allowNull: false,
-    unique: true,
   })
   active!: boolean;
 

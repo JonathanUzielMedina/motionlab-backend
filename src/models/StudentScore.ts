@@ -7,10 +7,12 @@ import {
   ForeignKey,
   BelongsTo,
 } from "sequelize-typescript";
+import { Optional } from "sequelize";
 import { Student } from "./Student";
 import { Round } from "./Round";
 
 interface StudentScoreAttributes {
+  id: number;
   student_id: string;
   round_id: number;
   score: number;
@@ -18,7 +20,7 @@ interface StudentScoreAttributes {
   position: number;
 }
 
-interface StudentScoreCreationAttributes extends StudentScoreAttributes {}
+interface StudentScoreCreationAttributes extends Optional<StudentScoreAttributes, "id"> {}
 
 @Table({
   tableName: "student_scores",
