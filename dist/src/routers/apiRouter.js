@@ -14,6 +14,8 @@ const lobbyRouter_1 = __importDefault(require("./lobbyRouter"));
 const teamRouter_1 = __importDefault(require("./teamRouter"));
 const simRouter_1 = __importDefault(require("./simRouter"));
 const matchRouter_1 = __importDefault(require("./matchRouter"));
+const RoundRouter_1 = __importDefault(require("./RoundRouter"));
+const StudentTeamRouter_1 = __importDefault(require("./StudentTeamRouter"));
 const apiRouter = (0, express_1.Router)();
 apiRouter.use("/auth", authRouter_1.default);
 apiRouter.use("/teacher", teacherRouter_1.default);
@@ -25,6 +27,8 @@ apiRouter.use("/lobby", lobbyRouter_1.default);
 apiRouter.use("/team", teamRouter_1.default);
 apiRouter.use("/sim", simRouter_1.default);
 apiRouter.use("/match", matchRouter_1.default);
+apiRouter.use("/round", RoundRouter_1.default);
+apiRouter.use("/st", StudentTeamRouter_1.default);
 apiRouter.get("/", (req, res) => {
     res.send("Api Root");
 });

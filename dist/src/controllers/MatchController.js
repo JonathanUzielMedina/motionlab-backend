@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createMatch = exports.getMatchesByTeacherId = exports.getMatchById = exports.getAllMatches = void 0;
+exports.getMatchParameters = exports.getMatchByCode = exports.createMatch = exports.getMatchesByTeacherId = exports.getAllMatches = void 0;
 const Match_1 = require("../models/Match");
 // Obtener todos los matches
 const getAllMatches = async (req, res) => {
@@ -22,35 +22,6 @@ const getAllMatches = async (req, res) => {
     }
 };
 exports.getAllMatches = getAllMatches;
-// Obtener un match por ID
-const getMatchById = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const match = await Match_1.Match.findByPk(id);
-        if (!match) {
-            res.status(404).json({
-                message: "Partida no encontrada",
-                payload: null,
-                status: "error",
-            });
-            return;
-        }
-        res.status(200).json({
-            message: "Partida obtenida exitosamente",
-            payload: match,
-            status: "success",
-        });
-    }
-    catch (error) {
-        console.error("Error al obtener la partida:", error);
-        res.status(500).json({
-            message: "Error en el servidor",
-            payload: null,
-            status: "error",
-        });
-    }
-};
-exports.getMatchById = getMatchById;
 // Obtener matches por ID del profesor
 const getMatchesByTeacherId = async (req, res) => {
     try {
@@ -91,6 +62,7 @@ const createMatch = async (req, res) => {
         match.active = true;
         match.start_time = new Date();
         match.end_time = null;
+        console.log(match);
         const data = await Match_1.Match.create(match);
         res.status(200).json({
             message: "Partida creada correctamente",
@@ -100,10 +72,74 @@ const createMatch = async (req, res) => {
     }
     catch (error) {
         res.status(500).json({
-            message: "Error en el servidor",
+            message: "Error en el servidor " + error,
             payload: null,
             status: "error",
         });
     }
 };
 exports.createMatch = createMatch;
+const getMatchByCode = async (req, res) => {
+    try {
+        const { code } = req.params;
+        const match = await Match_1.Match.findOne({
+            where: {
+                code: code,
+            },
+        });
+        if (!match) {
+            res.status(404).json({
+                message: "Partida no encontrada",
+                payload: null,
+                status: "error",
+            });
+            return;
+        }
+        res.status(200).json({
+            message: "Partida obtenida exitosamente",
+            payload: match,
+            status: "success",
+        });
+    }
+    catch (error) {
+        console.error("Error al obtener la partida:", error);
+        res.status(500).json({
+            message: "Error en el servidor",
+            payload: null,
+            status: "error",
+        });
+    }
+};
+exports.getMatchByCode = getMatchByCode;
+const getMatchParameters = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const match = await Match_1.Match.findByPk(id);
+        if (!match) {
+            res.status(404).json({
+                message: "Partida no encontrada",
+                payload: null,
+                status: "error",
+            });
+            return;
+        }
+        res.status(200).json({
+            message: "Parámetros de la partida obtenidos exitosamente",
+            payload: {
+                rpm: match.rpm,
+                wheel_size: match.wheel_size,
+                distance: match.distance,
+            },
+            status: "success",
+        });
+    }
+    catch (error) {
+        console.error("Error al obtener los parámetros de la partida:", error);
+        res.status(500).json({
+            message: "Error en el servidor",
+            payload: null,
+            status: "error",
+        });
+    }
+};
+exports.getMatchParameters = getMatchParameters;

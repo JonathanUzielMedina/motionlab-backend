@@ -1,9 +1,15 @@
 import { Router } from "express";
-import { getStudentScoresById, createStudentScores } from "../controllers/studentScoreController";
+import {
+  getStudentScoresById,
+  createStudentScores,
+  getAllStudentScore,
+  deleteAllStudentScores,
+} from "../controllers/studentScoreController";
 
 const studentScoreRouter: Router = Router();
 
 studentScoreRouter.get("/:id", getStudentScoresById);
-studentScoreRouter.get("/", createStudentScores);
-
+studentScoreRouter.get("/", getAllStudentScore);
+studentScoreRouter.post("/", createStudentScores);
+studentScoreRouter.delete("/", deleteAllStudentScores);
 export default studentScoreRouter;

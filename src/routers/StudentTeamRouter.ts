@@ -1,12 +1,12 @@
 import { Router } from "express";
 import {
-  getStudentTeamById,
   registerStudents,
+  getStudentsByTeamId,
 } from "../controllers/StudentTeamController";
 
 const studentTeamRouter: Router = Router();
 
-studentTeamRouter.get("/:id", getStudentTeamById);
+studentTeamRouter.get("/:id", getStudentsByTeamId);
 
 studentTeamRouter.post("/", registerStudents);
 

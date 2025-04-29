@@ -18,6 +18,27 @@ type Score = {
   position: number;
 };
 
+export const getAllStudentScore: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const studentScores: StudentScore[] = await StudentScore.findAll();
+
+    res.status(200).json({
+      message: "Scores obtenidos correctamente",
+      status: "succes",
+      payload: studentScores,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error en el servidor",
+      payload: null,
+      status: "error",
+    });
+  }
+};
+
 // Obtener los scores de un estudiante por ID de ronda
 export const getStudentScoresById: RequestHandler = async (
   req: Request,
@@ -73,9 +94,14 @@ export const createStudentScores: RequestHandler = async (
     req.body;
   const match = await Round.findByPk(roundId);
   if (!match) {
+    res.status(404).json({
+      message: "Round no encontrado",
+      status: "error",
+      payload: null,
+    });
     return;
   }
-  const matchId = await match.dataValues.id;
+  const matchId = match.dataValues.id;
   try {
     const scores: Score[] = [];
     const studentsIds: string[] = [];
@@ -91,22 +117,36 @@ export const createStudentScores: RequestHandler = async (
       });
     });
 
+    // Crear los scores iniciales
     await StudentScore.bulkCreate(scores, { validate: true });
 
-    const allScores = await StudentScore.findAll({
+    // Obtener todos los scores para este round específico
+    const allScores: StudentScore[] = await StudentScore.findAll({
       where: { round_id: roundId },
     });
 
-    const sortedScores = allScores.sort((a, b) => b.score - a.score);
+    // Ordenar scores de mayor a menor (el más alto primero)
+    const sortedScores = [...allScores].sort((a, b) => {
+      const scoreA = a.dataValues?.score || 0;
+      const scoreB = b.dataValues?.score || 0;
+      return scoreB - scoreA;
+    });
 
-    // Asignamos posición
-    await Promise.all(
-      sortedScores.map(async (scoreEntry, index) => {
-        scoreEntry.position = index + 1;
-        await scoreEntry.save();
-      })
-    );
-    updateStudentStats(studentsIds, matchId);
+    // Asignar posiciones correctamente (1 para el más alto, 2 para el segundo, etc.)
+    for (let i = 0; i < sortedScores.length; i++) {
+      await StudentScore.update(
+        { position: i + 1 }, // Posición 1 para índice 0, 2 para índice 1, etc.
+        {
+          where: {
+            id: sortedScores[i].dataValues.id, // Usar el ID único del registro
+          },
+        }
+      );
+    }
+
+    // Actualizar estadísticas de estudiantes después de asignar posiciones
+    await updateStudentStats(studentsIds, matchId);
+
     res.status(200).json({
       message:
         "Nuevos puntajes calculados correctamente y posiciones actualizadas",
@@ -114,8 +154,39 @@ export const createStudentScores: RequestHandler = async (
       payload: null,
     });
   } catch (error) {
+    console.error("Error en createStudentScores:", error);
     res.status(500).json({
       message: "Error en el servidor " + error,
+      status: "error",
+      payload: null,
+    });
+  }
+};
+
+export const deleteAllStudentScores: RequestHandler = async (req, res) => {
+  try {
+    // Eliminamos todos los registros de la tabla StudentScore
+    const deletedCount = await StudentScore.destroy({
+      where: {}, // Esto asegura que se eliminen todos los registros
+    });
+
+    if (deletedCount === 0) {
+      res.status(404).json({
+        message: "No se encontraron registros para eliminar",
+        status: "error",
+        payload: null,
+      });
+      return;
+    }
+
+    res.status(200).json({
+      message: `${deletedCount} registros de puntajes eliminados correctamente`,
+      status: "success",
+      payload: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Hubo un problema al eliminar los registros: " + error,
       status: "error",
       payload: null,
     });

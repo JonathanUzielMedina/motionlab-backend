@@ -17,7 +17,6 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const connection = new sequelize_typescript_1.Sequelize(process.env.DB_URL, {
     dialect: "postgres",
-    protocol: "postgres",
     dialectOptions: {
         ssl: {
             require: true,

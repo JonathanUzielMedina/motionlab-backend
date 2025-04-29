@@ -2,8 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const MatchController_1 = require("../controllers/MatchController");
-const MatchController_2 = require("../controllers/MatchController");
 const matchRouter = (0, express_1.Router)();
-matchRouter.post("/", MatchController_2.createMatch);
+matchRouter.post("/", MatchController_1.createMatch);
 matchRouter.get("/", MatchController_1.getAllMatches);
+matchRouter.get("/:id", MatchController_1.getMatchParameters);
+matchRouter.get("/teacher/:id", MatchController_1.getMatchesByTeacherId);
+matchRouter.get("/:code", MatchController_1.getMatchByCode);
 exports.default = matchRouter;

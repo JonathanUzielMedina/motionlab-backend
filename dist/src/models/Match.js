@@ -77,7 +77,6 @@ __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.BOOLEAN,
         allowNull: false,
-        unique: true,
     }),
     __metadata("design:type", Boolean)
 ], Match.prototype, "active", void 0);

@@ -21,36 +21,6 @@ export const getAllMatches: RequestHandler = async (
     });
   }
 };
-// Obtener un match por ID
-export const getMatchById: RequestHandler = async (
-  req: Request,
-  res: Response
-) => {
-  try {
-    const { id } = req.params;
-    const match = await Match.findByPk(id);
-    if (!match) {
-      res.status(404).json({
-        message: "Partida no encontrada",
-        payload: null,
-        status: "error",
-      });
-      return;
-    }
-    res.status(200).json({
-      message: "Partida obtenida exitosamente",
-      payload: match,
-      status: "success",
-    });
-  } catch (error) {
-    console.error("Error al obtener la partida:", error);
-    res.status(500).json({
-      message: "Error en el servidor",
-      payload: null,
-      status: "error",
-    });
-  }
-};
 // Obtener matches por ID del profesor
 export const getMatchesByTeacherId: RequestHandler = async (
   req: Request,
@@ -97,6 +67,7 @@ export const createMatch: RequestHandler = async (
     match.active = true;
     match.start_time = new Date();
     match.end_time = null;
+    console.log(match);
     const data: Match = await Match.create(match);
 
     res.status(200).json({
@@ -105,6 +76,74 @@ export const createMatch: RequestHandler = async (
       status: "success",
     });
   } catch (error) {
+    res.status(500).json({
+      message: "Error en el servidor " + error,
+      payload: null,
+      status: "error",
+    });
+  }
+};
+
+export const getMatchByCode: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { code } = req.params;
+    const match = await Match.findOne({
+      where: {
+        code: code,
+      },
+    });
+    if (!match) {
+      res.status(404).json({
+        message: "Partida no encontrada",
+        payload: null,
+        status: "error",
+      });
+      return;
+    }
+    res.status(200).json({
+      message: "Partida obtenida exitosamente",
+      payload: match,
+      status: "success",
+    });
+  } catch (error) {
+    console.error("Error al obtener la partida:", error);
+    res.status(500).json({
+      message: "Error en el servidor",
+      payload: null,
+      status: "error",
+    });
+  }
+};
+
+export const getMatchParameters: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { id } = req.params;
+    const match = await Match.findByPk(id);
+    if (!match) {
+      res.status(404).json({
+        message: "Partida no encontrada",
+        payload: null,
+        status: "error",
+      });
+      return;
+    }
+    res.status(200).json({
+      message: "Parámetros de la partida obtenidos exitosamente",
+      payload: {
+        rpm: match.rpm,
+        wheel_size: match.wheel_size,
+        distance: match.distance,
+      },
+      status: "success",
+    });
+  } catch (error) {
+    console.error("Error al obtener los parámetros de la partida:", error);
     res.status(500).json({
       message: "Error en el servidor",
       payload: null,
