@@ -1,6 +1,8 @@
 import { Request, Response, RequestHandler } from "express";
 import { StudentScore } from "../models/StudentScore";
 import { Student } from "../models/Student";
+import { Round } from "../models/Round";
+import { updateStudentStats } from "./studentController";
 
 type StudentResult = {
   student_id: string;
@@ -69,10 +71,16 @@ export const createStudentScores: RequestHandler = async (
   }
   const { results, roundId }: { results: StudentResult[]; roundId: number } =
     req.body;
-
+  const match = await Round.findByPk(roundId);
+  if (!match) {
+    return;
+  }
+  const matchId = await match.dataValues.id;
   try {
     const scores: Score[] = [];
+    const studentsIds: string[] = [];
     results.forEach((result) => {
+      studentsIds.push(result.student_id);
       const score = (result.distance / result.time) * 1000;
       scores.push({
         score: score,
@@ -98,7 +106,7 @@ export const createStudentScores: RequestHandler = async (
         await scoreEntry.save();
       })
     );
-
+    updateStudentStats(studentsIds, matchId);
     res.status(200).json({
       message:
         "Nuevos puntajes calculados correctamente y posiciones actualizadas",

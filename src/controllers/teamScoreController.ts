@@ -3,7 +3,8 @@ import { Team } from "../models/Team";
 import { TeamScore } from "../models/TeamScore";
 import { StudentScore } from "../models/StudentScore";
 import { StudentTeam } from "../models/StudentTeam";
-
+import { updateTeamStats } from "./teamStatsController";
+import { Round } from "../models/Round";
 // Obtener los scores de un equipo por ID de ronda
 
 type TeamResult = {
@@ -80,23 +81,20 @@ export const createTeamScore: RequestHandler = async (
 
   const { results, roundId }: { results: TeamResult[]; roundId: number } =
     req.body;
-
+  const match = await Round.findByPk(roundId);
+  if (!match) {
+    return;
+  }
+  const matchId = await match.dataValues.id;
   try {
-    if (!Array.isArray(results) || results.length === 0) {
-      res.status(400).json({
-        message: "No se proporcionaron resultados válidos.",
-        status: "error",
-        payload: null,
-      });
-      return
-    }
-
     const teamScores: TeamScoreAttributes[] = [];
+    const teamIds: number[] = [];
 
     for (const result of results) {
       const { team_id, time } = result;
+      teamIds.push(team_id);
       const studentTeams = await StudentTeam.findAll({
-        where: { id_team:team_id },
+        where: { id_team: team_id },
       });
 
       const studentIds = studentTeams.map((st) => st.id_student);
@@ -136,6 +134,8 @@ export const createTeamScore: RequestHandler = async (
     });
 
     await TeamScore.bulkCreate(teamScores);
+
+    updateTeamStats(teamIds, matchId);
 
     res.status(201).json({
       message: "Puntajes de equipos creados exitosamente.",

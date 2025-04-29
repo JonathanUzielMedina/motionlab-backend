@@ -67,44 +67,28 @@ export const createStudent: RequestHandler = async (
   }
 };
 
-export const updateStudentStats: RequestHandler = async (
-  req: Request,
-  res: Response
-) => {
-  if (!req.body) {
-    res.status(400).json({
-      status: "error",
-      message: "No existe un cuerpo en la solicitud",
-      payload: null,
-    });
-    return;
-  }
-
-  const { student_ids, match_id } = req.body;
-
+export const updateStudentStats = async (
+  studentIds: string[],
+  matchId: number
+): Promise<void> => {
   try {
-    // 1. Conseguir todas las rondas que pertenecen al match
     const rounds = await Round.findAll({
-      where: { match_id: match_id },
+      where: { match_id: matchId },
     });
     const roundIds = rounds.map((r) => r.id);
 
-    // 2. Procesar cada estudiante
-    for (const student_id of student_ids) {
-      // Traer TODOS sus scores
+    for (const student_id of studentIds) {
       const allScores = await StudentScore.findAll({
         where: { student_id: student_id },
       });
 
-      // Traer SOLO sus scores de las rondas de este match
       const matchScores = await StudentScore.findAll({
         where: {
           student_id: student_id,
-          round_id: roundIds, // Sequelize entiende arrays aquí
+          round_id: roundIds,
         },
       });
 
-      // --- Calcular estadísticas ---
       const played_rounds = allScores.length;
 
       const total_time = allScores.reduce((acc, score) => acc + score.time, 0);
@@ -124,7 +108,6 @@ export const updateStudentStats: RequestHandler = async (
       const average_match_position =
         matchScores.length > 0 ? total_match_position / matchScores.length : 0;
 
-      // 3. Actualizar al estudiante
       await Student.update(
         {
           played_rounds,
@@ -135,18 +118,7 @@ export const updateStudentStats: RequestHandler = async (
         { where: { id: student_id } }
       );
     }
-
-    res.status(200).json({
-      status: "success",
-      message: "Estadísticas actualizadas exitosamente",
-      payload: null,
-    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      status: "error",
-      message: "Error en el servidor " + error,
-      payload: null,
-    });
   }
 };
