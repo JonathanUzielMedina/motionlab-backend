@@ -80,12 +80,12 @@ export const getRoundById: RequestHandler = async (
 };
 
 export const createRound: RequestHandler = async (
-    req: Request,
-    res: Response
+  req: Request,
+  res: Response
 ) => {
   try {
     const { match_id } = req.body;
-    const newRound = await Round.create({match_id});
+    const newRound = await Round.create({ match_id });
 
     res.status(201).json({
       message: "Ronda creada exitosamente",
@@ -100,4 +100,29 @@ export const createRound: RequestHandler = async (
       status: "error",
     });
   }
-}
+};
+
+export const getMostRecentRound: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const lastRound = await Round.findOne({
+      order: [["id", "DESC"]],
+    });
+    if (!lastRound) {
+      return;
+    }
+    res.status(200).json({
+      message: "Ronda obtenida correctamente",
+      status: "success",
+      payload: lastRound.dataValues,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Problemas en el servidor: " + error,
+      status: "error",
+      payload: null,
+    });
+  }
+};
