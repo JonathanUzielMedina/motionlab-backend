@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteTeamFromLobby = exports.lobbyAccess = exports.getLobbyTeams = void 0;
 const Team_1 = require("../models/Team");
-const Student_1 = require("../models/Student");
 const StudentTeam_1 = require("../models/StudentTeam");
 const Match_1 = require("../models/Match");
 const getLobbyTeams = async (req, res) => {
@@ -13,24 +12,24 @@ const getLobbyTeams = async (req, res) => {
                 match_id: matchId,
                 ready: true,
             },
-            include: [
-                {
-                    model: StudentTeam_1.StudentTeam,
-                    include: [
-                        {
-                            model: Student_1.Student,
-                            attributes: ["id"],
-                        },
-                    ],
-                },
-            ],
         });
-        const lobbyTeams = teams.map((team) => ({
-            teamId: team.id,
-            students: team.studentTeams.map((st) => ({
-                id: st.student.id,
-            })),
-        }));
+        const lobbyTeams = [];
+        for (const element of teams) {
+            const team = {};
+            team.team_id = element.dataValues.id;
+            const st = await StudentTeam_1.StudentTeam.findAll({
+                where: {
+                    id_team: element.dataValues.id,
+                },
+            });
+            const students = [];
+            st.map((a) => {
+                const student = a.dataValues.id_student;
+                students.push(student);
+            });
+            team.student_ids = students;
+            lobbyTeams.push(team);
+        }
         res.status(200).json({
             status: "success",
             message: "Equipos obtenidos correctamente",
