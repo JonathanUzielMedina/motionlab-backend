@@ -9,8 +9,7 @@ import {
 const roundRouter: Router = Router();
 
 roundRouter.get("/", getAllRounds);
-roundRouter.get("/:id", getRoundById);
 roundRouter.post("/", createRound);
-roundRouter.get("/current", getMostRecentRound);
+roundRouter.get("/current/:id", getMostRecentRound);
 
 export default roundRouter;

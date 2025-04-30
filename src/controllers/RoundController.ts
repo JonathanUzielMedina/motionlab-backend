@@ -108,15 +108,23 @@ export const getMostRecentRound: RequestHandler = async (
 ) => {
   try {
     const lastRound = await Round.findOne({
+      where: {
+        match_id: req.params.id,
+      },
       order: [["id", "DESC"]],
     });
     if (!lastRound) {
+      res.status(500).json({
+        message: "No existe la ronda",
+        status: "error",
+        payload: null,
+      });
       return;
     }
     res.status(200).json({
       message: "Ronda obtenida correctamente",
       status: "success",
-      payload: lastRound.dataValues,
+      payload: lastRound,
     });
   } catch (error) {
     res.status(500).json({

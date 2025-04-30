@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createRound = exports.getRoundById = exports.getAllRounds = void 0;
+exports.getMostRecentRound = exports.createRound = exports.getRoundById = exports.getAllRounds = void 0;
 const Round_1 = require("../models/Round");
 const TeamScore_1 = require("../models/TeamScore");
 const StudentScore_1 = require("../models/StudentScore");
@@ -93,3 +93,34 @@ const createRound = async (req, res) => {
     }
 };
 exports.createRound = createRound;
+const getMostRecentRound = async (req, res) => {
+    try {
+        const lastRound = await Round_1.Round.findOne({
+            where: {
+                match_id: req.params.id,
+            },
+            order: [["id", "DESC"]],
+        });
+        if (!lastRound) {
+            res.status(500).json({
+                message: "No existe la ronda",
+                status: "error",
+                payload: null,
+            });
+            return;
+        }
+        res.status(200).json({
+            message: "Ronda obtenida correctamente",
+            status: "success",
+            payload: lastRound,
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "Problemas en el servidor: " + error,
+            status: "error",
+            payload: null,
+        });
+    }
+};
+exports.getMostRecentRound = getMostRecentRound;
