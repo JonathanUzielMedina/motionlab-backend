@@ -1,14 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAllStudentScores = exports.createStudentScores = exports.getStudentScoresById = exports.getAllStudentScore = void 0;
+exports.deleteAllStudentScores = exports.createStudentScores = exports.getStudentScoresById = exports.getStudentScoreByRound = void 0;
 const StudentScore_1 = require("../models/StudentScore");
 const Student_1 = require("../models/Student");
 const Round_1 = require("../models/Round");
 const studentController_1 = require("./studentController");
 const Match_1 = require("../models/Match");
-const getAllStudentScore = async (req, res) => {
+const getStudentScoreByRound = async (req, res) => {
     try {
-        const studentScores = await StudentScore_1.StudentScore.findAll();
+        const studentScores = await StudentScore_1.StudentScore.findAll({
+            where: {
+                round_id: req.params,
+            },
+        });
         res.status(200).json({
             message: "Scores obtenidos correctamente",
             status: "succes",
@@ -23,7 +27,7 @@ const getAllStudentScore = async (req, res) => {
         });
     }
 };
-exports.getAllStudentScore = getAllStudentScore;
+exports.getStudentScoreByRound = getStudentScoreByRound;
 // Obtener los scores de un estudiante por ID de ronda
 const getStudentScoresById = async (req, res) => {
     try {

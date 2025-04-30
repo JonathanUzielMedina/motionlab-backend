@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   getTeamScoreById,
   createTeamScore,
-  getAllTeamScores,
+  getTeamScoresByRound,
 } from "../controllers/teamScoreController";
 
 const teamScoreRouter: Router = Router();
@@ -11,6 +11,6 @@ teamScoreRouter.get("/:id", getTeamScoreById);
 
 teamScoreRouter.post("/", createTeamScore);
 
-teamScoreRouter.get("/", getAllTeamScores);
+teamScoreRouter.get("/:id", getTeamScoresByRound);
 
 export default teamScoreRouter;

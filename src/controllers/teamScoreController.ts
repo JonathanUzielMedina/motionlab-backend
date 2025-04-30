@@ -198,16 +198,20 @@ export const createTeamScore: RequestHandler = async (
   }
 };
 
-export const getAllTeamScores: RequestHandler = async (
+export const getTeamScoresByRound: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const teamScores: TeamScore[] = await TeamScore.findAll();
+    const teamScores: TeamScore[] = await TeamScore.findAll({
+      where: {
+        round_id: req.params,
+      },
+    });
     res.status(200).json({
       message: "Scores de los equipos obtenidos correctamente",
       status: "success",
-      payload: teamScores
+      payload: teamScores,
     });
   } catch (error) {
     res.status(500).json({

@@ -19,12 +19,16 @@ type Score = {
   position: number;
 };
 
-export const getAllStudentScore: RequestHandler = async (
+export const getStudentScoreByRound: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const studentScores: StudentScore[] = await StudentScore.findAll();
+    const studentScores: StudentScore[] = await StudentScore.findAll({
+      where: {
+        round_id: req.params,
+      },
+    });
 
     res.status(200).json({
       message: "Scores obtenidos correctamente",
