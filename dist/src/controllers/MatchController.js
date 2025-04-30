@@ -126,9 +126,9 @@ const getMatchParameters = async (req, res) => {
         res.status(200).json({
             message: "Parámetros de la partida obtenidos exitosamente",
             payload: {
-                rpm: match.rpm,
-                wheel_size: match.wheel_size,
-                distance: match.distance,
+                rpm: match.dataValues.rpm,
+                wheel_size: match.dataValues.wheel_size,
+                distance: match.dataValues.distance,
             },
             status: "success",
         });
