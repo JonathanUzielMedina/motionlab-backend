@@ -17,13 +17,12 @@ const Team_1 = require("./Team");
 let Match = class Match extends sequelize_typescript_1.Model {
     teams;
     members;
+    rounds_amount;
     rpm;
     wheel_size;
     distance;
     code;
     active;
-    start_time;
-    end_time;
     teacher_id;
     teacher;
     rounds;
@@ -44,6 +43,13 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], Match.prototype, "members", void 0);
+__decorate([
+    (0, sequelize_typescript_1.AllowNull)(false),
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.INTEGER,
+    }),
+    __metadata("design:type", Number)
+], Match.prototype, "rounds_amount", void 0);
 __decorate([
     (0, sequelize_typescript_1.AllowNull)(false),
     (0, sequelize_typescript_1.Column)({
@@ -80,18 +86,6 @@ __decorate([
     }),
     __metadata("design:type", Boolean)
 ], Match.prototype, "active", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.DATE,
-    }),
-    __metadata("design:type", Date)
-], Match.prototype, "start_time", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.DATE,
-    }),
-    __metadata("design:type", Date)
-], Match.prototype, "end_time", void 0);
 __decorate([
     (0, sequelize_typescript_1.ForeignKey)(() => Teacher_1.Teacher),
     (0, sequelize_typescript_1.Column)({
