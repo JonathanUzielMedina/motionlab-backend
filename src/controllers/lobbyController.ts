@@ -4,6 +4,11 @@ import { Student } from "../models/Student";
 import { StudentTeam } from "../models/StudentTeam";
 import { Match } from "../models/Match";
 
+type Lobbys = {
+  team_id?: number;
+  student_ids?: string[];
+};
+
 export const getLobbyTeams: RequestHandler = async (
   req: Request,
   res: Response
@@ -16,25 +21,26 @@ export const getLobbyTeams: RequestHandler = async (
         match_id: matchId,
         ready: true,
       },
-      include: [
-        {
-          model: StudentTeam,
-          include: [
-            {
-              model: Student,
-              attributes: ["id"],
-            },
-          ],
-        },
-      ],
     });
 
-    const lobbyTeams = teams.map((team) => ({
-      teamId: team.id,
-      students: team.studentTeams.map((st) => ({
-        id: st.student.id,
-      })),
-    }));
+    const lobbyTeams: Lobbys[] = [];
+
+    for (const element of teams) {
+      const team: Lobbys = {};
+      team.team_id = element.dataValues.id;
+      const st = await StudentTeam.findAll({
+        where: {
+          id_team: element.dataValues.id,
+        },
+      });
+      const students: string[] = [];
+      st.map((a) => {
+        const student = a.dataValues.id_student;
+        students.push(student);
+      });
+      team.student_ids = students;
+      lobbyTeams.push(team);
+    }
 
     res.status(200).json({
       status: "success",
@@ -73,6 +79,8 @@ export const lobbyAccess: RequestHandler = async (
         active: true,
       },
     });
+
+    console.log(match);
 
     if (!match) {
       res.status(404).json({

@@ -16,7 +16,7 @@ export const registerStudents = async (
       });
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
 
@@ -30,15 +30,11 @@ export const getStudentsByTeamId: RequestHandler = async (
       where: {
         id_team: id,
       },
-      include: [
-        {
-          model: StudentTeam,
-        },
-      ],
     });
+
     const data = rawData.map((element) => ({
-      studentId: element.student.id,
-      teamId: element.team.id,
+      studentId: element.dataValues.id_student,
+      teamId: element.dataValues.id_team,
     }));
     res.status(200).json({
       message: "Estudiantes del equipo obtenidos exitosamente",
