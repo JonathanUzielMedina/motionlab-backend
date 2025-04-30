@@ -64,7 +64,7 @@ export const createMatch: RequestHandler = async (
 
     const match = { ...req.body };
     match.code = Math.random().toString(36).substr(2, 8).toUpperCase();
-    match.active = true;
+    match.active = false;
     match.start_time = new Date();
     match.end_time = null;
     console.log(match);
@@ -148,6 +148,75 @@ export const getMatchParameters: RequestHandler = async (
       message: "Error en el servidor",
       payload: null,
       status: "error",
+    });
+  }
+};
+
+export const changeMatchStatus: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  if (!req.body) {
+    res.status(500).json({
+      message: "Cuerpo esta vacio",
+      status: "error",
+      payload: null,
+    });
+  }
+  const { match_id } = req.body;
+
+  try {
+    const match = await Match.findByPk(match_id);
+    if (!match) {
+      res.status(500).json({
+        message: "No existe esa partida",
+        status: "error",
+        payload: null,
+      });
+      return;
+    }
+    const newStatus = !match.dataValues.active;
+    await match.update({ active: newStatus });
+
+    res.status(200).json({
+      message: "Status cambiado correctamente",
+      status: "success",
+      payload: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error en el servidor " + error,
+      status: "error",
+      payload: null,
+    });
+  }
+};
+
+export const getMatchStatus: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const { match_id } = req.params;
+  try {
+    const match = await Match.findByPk(match_id);
+    if (!match) {
+      res.status(500).json({
+        message: "No existe esa partida",
+        status: "error",
+        payload: null,
+      });
+      return;
+    }
+    res.status(200).json({
+      message: "Se recupero el status correctamente",
+      status: "success",
+      payload: match.dataValues.active,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error en el servidor " + error,
+      status: "error",
+      payload: null,
     });
   }
 };

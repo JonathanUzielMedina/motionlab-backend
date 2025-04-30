@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMatchParameters = exports.getMatchByCode = exports.createMatch = exports.getMatchesByTeacherId = exports.getAllMatches = void 0;
+exports.getMatchStatus = exports.changeMatchStatus = exports.getMatchParameters = exports.getMatchByCode = exports.createMatch = exports.getMatchesByTeacherId = exports.getAllMatches = void 0;
 const Match_1 = require("../models/Match");
 // Obtener todos los matches
 const getAllMatches = async (req, res) => {
@@ -59,7 +59,7 @@ const createMatch = async (req, res) => {
         }
         const match = { ...req.body };
         match.code = Math.random().toString(36).substr(2, 8).toUpperCase();
-        match.active = true;
+        match.active = false;
         match.start_time = new Date();
         match.end_time = null;
         console.log(match);
@@ -143,3 +143,66 @@ const getMatchParameters = async (req, res) => {
     }
 };
 exports.getMatchParameters = getMatchParameters;
+const changeMatchStatus = async (req, res) => {
+    if (!req.body) {
+        res.status(500).json({
+            message: "Cuerpo esta vacio",
+            status: "error",
+            payload: null,
+        });
+    }
+    const { match_id } = req.body;
+    try {
+        const match = await Match_1.Match.findByPk(match_id);
+        if (!match) {
+            res.status(500).json({
+                message: "No existe esa partida",
+                status: "error",
+                payload: null,
+            });
+            return;
+        }
+        const newStatus = !match.dataValues.active;
+        await match.update({ active: newStatus });
+        res.status(200).json({
+            message: "Status cambiado correctamente",
+            status: "success",
+            payload: null,
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "Error en el servidor " + error,
+            status: "error",
+            payload: null,
+        });
+    }
+};
+exports.changeMatchStatus = changeMatchStatus;
+const getMatchStatus = async (req, res) => {
+    const { match_id } = req.params;
+    try {
+        const match = await Match_1.Match.findByPk(match_id);
+        if (!match) {
+            res.status(500).json({
+                message: "No existe esa partida",
+                status: "error",
+                payload: null,
+            });
+            return;
+        }
+        res.status(200).json({
+            message: "Se recupero el status correctamente",
+            status: "success",
+            payload: match.dataValues.active,
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "Error en el servidor " + error,
+            status: "error",
+            payload: null,
+        });
+    }
+};
+exports.getMatchStatus = getMatchStatus;

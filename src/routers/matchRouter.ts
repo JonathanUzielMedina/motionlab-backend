@@ -4,7 +4,9 @@ import {
   createMatch,
   getMatchesByTeacherId,
   getMatchByCode,
-  getMatchParameters
+  getMatchParameters,
+  changeMatchStatus,
+  getMatchStatus,
 } from "../controllers/MatchController";
 
 const matchRouter: Router = Router();
@@ -18,5 +20,9 @@ matchRouter.get("/:id", getMatchParameters);
 matchRouter.get("/teacher/:id", getMatchesByTeacherId);
 
 matchRouter.get("/:code", getMatchByCode);
+
+matchRouter.post("/status", changeMatchStatus);
+
+matchRouter.get("/status/:match_id", getMatchStatus);
 
 export default matchRouter;
