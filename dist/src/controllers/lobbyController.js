@@ -64,6 +64,7 @@ const lobbyAccess = async (req, res) => {
                 active: true,
             },
         });
+        console.log(match);
         if (!match) {
             res.status(404).json({
                 status: "error",

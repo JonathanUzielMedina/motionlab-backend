@@ -7,9 +7,9 @@ import {
 
 const lobbyRouter: Router = Router();
 
-lobbyRouter.get("/:matchId", getLobbyTeams);
+lobbyRouter.get("/teams/:matchId", getLobbyTeams);
 
-lobbyRouter.get("/:id", lobbyAccess);
+lobbyRouter.get("/access/:code", lobbyAccess);
 
 lobbyRouter.delete("/:id", deleteTeamFromLobby);
 

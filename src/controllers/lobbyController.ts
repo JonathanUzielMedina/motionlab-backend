@@ -74,6 +74,8 @@ export const lobbyAccess: RequestHandler = async (
       },
     });
 
+    console.log(match);
+
     if (!match) {
       res.status(404).json({
         status: "error",
