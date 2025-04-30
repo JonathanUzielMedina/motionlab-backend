@@ -24,15 +24,10 @@ const getStudentsByTeamId = async (req, res) => {
             where: {
                 id_team: id,
             },
-            include: [
-                {
-                    model: StudentTeam_1.StudentTeam,
-                },
-            ],
         });
         const data = rawData.map((element) => ({
-            studentId: element.student.id,
-            teamId: element.team.id,
+            studentId: element.dataValues.id_student,
+            teamId: element.dataValues.id_team,
         }));
         res.status(200).json({
             message: "Estudiantes del equipo obtenidos exitosamente",
