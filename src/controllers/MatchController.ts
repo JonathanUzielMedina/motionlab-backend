@@ -65,8 +65,6 @@ export const createMatch: RequestHandler = async (
     const match = { ...req.body };
     match.code = Math.random().toString(36).substr(2, 8).toUpperCase();
     match.active = false;
-    match.start_time = new Date();
-    match.end_time = null;
     console.log(match);
     const data: Match = await Match.create(match);
 

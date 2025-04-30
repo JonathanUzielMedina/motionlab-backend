@@ -18,13 +18,12 @@ interface MatchAttributes {
   teacher_id: string;
   teams: number;
   members: number;
+  rounds_amount: number;
   rpm: number;
   wheel_size: number;
   distance: number;
   code: string;
   active: boolean;
-  start_time: Date;
-  end_time: Date;
 }
 
 interface MatchCreationAttributes extends Optional<MatchAttributes, "id"> {}
@@ -45,6 +44,12 @@ export class Match extends Model<MatchAttributes, MatchCreationAttributes> {
     type: DataType.INTEGER,
   })
   members!: number;
+
+  @AllowNull(false)
+  @Column({
+    type: DataType.INTEGER,
+  })
+  rounds_amount!: number;
 
   @AllowNull(false)
   @Column({
@@ -76,16 +81,6 @@ export class Match extends Model<MatchAttributes, MatchCreationAttributes> {
     allowNull: false,
   })
   active!: boolean;
-
-  @Column({
-    type: DataType.DATE,
-  })
-  start_time?: Date;
-
-  @Column({
-    type: DataType.DATE,
-  })
-  end_time?: Date;
 
   @ForeignKey(() => Teacher)
   @Column({
