@@ -1,11 +1,15 @@
 import { Router } from "express";
-import { deleteTeamFromLobby, getLobbyTeams, lobbyAccess } from "../controllers/lobbyController";
+import {
+  deleteTeamFromLobby,
+  getLobbyTeams,
+  lobbyAccess,
+} from "../controllers/lobbyController";
 
 const lobbyRouter: Router = Router();
 
-lobbyRouter.get("/", getLobbyTeams);
+lobbyRouter.get("/teams/:matchId", getLobbyTeams);
 
-lobbyRouter.get("/:id", lobbyAccess);
+lobbyRouter.get("/access/:code", lobbyAccess);
 
 lobbyRouter.delete("/:id", deleteTeamFromLobby);
 

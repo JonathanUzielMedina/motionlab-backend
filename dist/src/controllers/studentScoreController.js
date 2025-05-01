@@ -1,14 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAllStudentScores = exports.createStudentScores = exports.getStudentScoresById = exports.getAllStudentScore = void 0;
+exports.deleteAllStudentScores = exports.createStudentScores = exports.getAllStudentScores = exports.getStudentScoresById = exports.getStudentScoreByRound = void 0;
 const StudentScore_1 = require("../models/StudentScore");
 const Student_1 = require("../models/Student");
 const Round_1 = require("../models/Round");
 const studentController_1 = require("./studentController");
 const Match_1 = require("../models/Match");
-const getAllStudentScore = async (req, res) => {
+const getStudentScoreByRound = async (req, res) => {
     try {
-        const studentScores = await StudentScore_1.StudentScore.findAll();
+        const studentScores = await StudentScore_1.StudentScore.findAll({
+            where: {
+                round_id: req.params,
+            },
+        });
         res.status(200).json({
             message: "Scores obtenidos correctamente",
             status: "succes",
@@ -23,7 +27,7 @@ const getAllStudentScore = async (req, res) => {
         });
     }
 };
-exports.getAllStudentScore = getAllStudentScore;
+exports.getStudentScoreByRound = getStudentScoreByRound;
 // Obtener los scores de un estudiante por ID de ronda
 const getStudentScoresById = async (req, res) => {
     try {
@@ -59,6 +63,31 @@ const getStudentScoresById = async (req, res) => {
     }
 };
 exports.getStudentScoresById = getStudentScoresById;
+const getAllStudentScores = async (req, res) => {
+    try {
+        const rawScores = await StudentScore_1.StudentScore.findAll({
+            order: [["score", "DESC"]],
+        });
+        const scores = rawScores.map((score) => ({
+            id: score.dataValues.student_id,
+            time: score.dataValues.time,
+            score: score.dataValues.score,
+        }));
+        res.status(200).json({
+            message: "Puntajes de los alumnos obtenidos correctamente",
+            status: "success",
+            payload: scores,
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "Problemas en el servidor " + error,
+            status: "Error",
+            payload: null,
+        });
+    }
+};
+exports.getAllStudentScores = getAllStudentScores;
 const createStudentScores = async (req, res) => {
     if (!req.body) {
         res.status(400).json({
@@ -99,28 +128,22 @@ const createStudentScores = async (req, res) => {
                 position: 0,
             });
         });
-        // Crear los scores iniciales
         await StudentScore_1.StudentScore.bulkCreate(scores, { validate: true });
-        // Obtener todos los scores para este round específico
         const allScores = await StudentScore_1.StudentScore.findAll({
             where: { round_id: roundId },
         });
-        // Ordenar scores de mayor a menor (el más alto primero)
         const sortedScores = [...allScores].sort((a, b) => {
             const scoreA = a.dataValues?.score || 0;
             const scoreB = b.dataValues?.score || 0;
             return scoreB - scoreA;
         });
-        // Asignar posiciones correctamente (1 para el más alto, 2 para el segundo, etc.)
         for (let i = 0; i < sortedScores.length; i++) {
-            await StudentScore_1.StudentScore.update({ position: i + 1 }, // Posición 1 para índice 0, 2 para índice 1, etc.
-            {
+            await StudentScore_1.StudentScore.update({ position: i + 1 }, {
                 where: {
-                    id: sortedScores[i].dataValues.id, // Usar el ID único del registro
+                    id: sortedScores[i].dataValues.id,
                 },
             });
         }
-        // Actualizar estadísticas de estudiantes después de asignar posiciones
         await (0, studentController_1.updateStudentStats)(studentsIds, matchId);
         res.status(200).json({
             message: "Nuevos puntajes calculados correctamente y posiciones actualizadas",
@@ -140,9 +163,8 @@ const createStudentScores = async (req, res) => {
 exports.createStudentScores = createStudentScores;
 const deleteAllStudentScores = async (req, res) => {
     try {
-        // Eliminamos todos los registros de la tabla StudentScore
         const deletedCount = await StudentScore_1.StudentScore.destroy({
-            where: {}, // Esto asegura que se eliminen todos los registros
+            where: {},
         });
         if (deletedCount === 0) {
             res.status(404).json({

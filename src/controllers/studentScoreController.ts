@@ -19,12 +19,16 @@ type Score = {
   position: number;
 };
 
-export const getAllStudentScore: RequestHandler = async (
+export const getStudentScoreByRound: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const studentScores: StudentScore[] = await StudentScore.findAll();
+    const studentScores: StudentScore[] = await StudentScore.findAll({
+      where: {
+        round_id: req.params,
+      },
+    });
 
     res.status(200).json({
       message: "Scores obtenidos correctamente",
@@ -79,6 +83,35 @@ export const getStudentScoresById: RequestHandler = async (
   }
 };
 
+export const getAllStudentScores: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const rawScores = await StudentScore.findAll({
+      order: [["score", "DESC"]],
+    });
+
+    const scores = rawScores.map((score) => ({
+      id: score.dataValues.student_id,
+      time: score.dataValues.time,
+      score: score.dataValues.score,
+    }));
+
+    res.status(200).json({
+      message: "Puntajes de los alumnos obtenidos correctamente",
+      status: "success",
+      payload: scores,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Problemas en el servidor " + error,
+      status: "Error",
+      payload: null,
+    });
+  }
+};
+
 export const createStudentScores: RequestHandler = async (
   req: Request,
   res: Response
@@ -124,34 +157,29 @@ export const createStudentScores: RequestHandler = async (
       });
     });
 
-    // Crear los scores iniciales
     await StudentScore.bulkCreate(scores, { validate: true });
 
-    // Obtener todos los scores para este round específico
     const allScores: StudentScore[] = await StudentScore.findAll({
       where: { round_id: roundId },
     });
 
-    // Ordenar scores de mayor a menor (el más alto primero)
     const sortedScores = [...allScores].sort((a, b) => {
       const scoreA = a.dataValues?.score || 0;
       const scoreB = b.dataValues?.score || 0;
       return scoreB - scoreA;
     });
 
-    // Asignar posiciones correctamente (1 para el más alto, 2 para el segundo, etc.)
     for (let i = 0; i < sortedScores.length; i++) {
       await StudentScore.update(
-        { position: i + 1 }, // Posición 1 para índice 0, 2 para índice 1, etc.
+        { position: i + 1 },
         {
           where: {
-            id: sortedScores[i].dataValues.id, // Usar el ID único del registro
+            id: sortedScores[i].dataValues.id,
           },
         }
       );
     }
 
-    // Actualizar estadísticas de estudiantes después de asignar posiciones
     await updateStudentStats(studentsIds, matchId);
 
     res.status(200).json({
@@ -172,9 +200,8 @@ export const createStudentScores: RequestHandler = async (
 
 export const deleteAllStudentScores: RequestHandler = async (req, res) => {
   try {
-    // Eliminamos todos los registros de la tabla StudentScore
     const deletedCount = await StudentScore.destroy({
-      where: {}, // Esto asegura que se eliminen todos los registros
+      where: {},
     });
 
     if (deletedCount === 0) {

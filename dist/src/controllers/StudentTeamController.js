@@ -3,8 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getStudentsByTeamId = exports.registerStudents = void 0;
 const StudentTeam_1 = require("../models/StudentTeam");
 // Hay que juntar esta con la de create student
-const registerStudents = async (req, res) => {
-    const { student_ids, team_id } = req.body;
+const registerStudents = async (student_ids, team_id) => {
     try {
         student_ids.forEach(async (id) => {
             const newStudentTeam = await StudentTeam_1.StudentTeam.create({
@@ -12,18 +11,9 @@ const registerStudents = async (req, res) => {
                 id_team: team_id,
             });
         });
-        res.status(200).json({
-            message: "Alumnos asignados correctamente a un equipo",
-            status: "Success",
-            payload: null,
-        });
     }
     catch (error) {
-        res.status(500).json({
-            message: "Error en el servidor" + error,
-            status: "Error",
-            payload: null,
-        });
+        console.log(error);
     }
 };
 exports.registerStudents = registerStudents;
@@ -34,15 +24,10 @@ const getStudentsByTeamId = async (req, res) => {
             where: {
                 id_team: id,
             },
-            include: [
-                {
-                    model: StudentTeam_1.StudentTeam,
-                },
-            ],
         });
         const data = rawData.map((element) => ({
-            studentId: element.student.id,
-            teamId: element.team.id,
+            studentId: element.dataValues.id_student,
+            teamId: element.dataValues.id_team,
         }));
         res.status(200).json({
             message: "Estudiantes del equipo obtenidos exitosamente",

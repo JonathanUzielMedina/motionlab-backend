@@ -5,10 +5,6 @@ import {
   HasMany,
   PrimaryKey,
   DataType,
-  AllowNull,
-  ForeignKey,
-  BelongsTo,
-  HasOne,
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
 import { StudentTeam } from "./StudentTeam";
