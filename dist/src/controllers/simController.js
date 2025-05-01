@@ -259,14 +259,14 @@ const isSimulationReady = async (req, res) => {
         });
         const scoresAmount = roundScores.length;
         if (scoresAmount < match.dataValues.teams) {
-            res.status(500).json({
+            res.status(200).json({
                 message: "Aun no se han registrado los scores de todos los equipos",
                 status: "success",
                 payload: false,
             });
             return;
         }
-        res.status(500).json({
+        res.status(200).json({
             message: "Se han registrado los scores de todos los equipos",
             status: "success",
             payload: true,
