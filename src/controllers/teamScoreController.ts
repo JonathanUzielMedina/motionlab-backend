@@ -78,7 +78,7 @@ export const getAllTeamScores: RequestHandler = async (
     });
 
     const scores = rawScores.map((score) => ({
-      team_id: score.dataValues.team_id,
+      id: score.dataValues.team_id,
       time: score.dataValues.time,
       score: score.dataValues.score,
     }));

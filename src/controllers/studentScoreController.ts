@@ -93,7 +93,7 @@ export const getAllStudentScores: RequestHandler = async (
     });
 
     const scores = rawScores.map((score) => ({
-      student_id: score.dataValues.student_id,
+      id: score.dataValues.student_id,
       time: score.dataValues.time,
       score: score.dataValues.score,
     }));

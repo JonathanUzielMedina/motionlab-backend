@@ -49,7 +49,7 @@ const getAllTeamScores = async (req, res) => {
             order: [["score", "DESC"]],
         });
         const scores = rawScores.map((score) => ({
-            team_id: score.dataValues.team_id,
+            id: score.dataValues.team_id,
             time: score.dataValues.time,
             score: score.dataValues.score,
         }));
