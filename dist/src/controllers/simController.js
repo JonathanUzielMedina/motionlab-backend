@@ -217,13 +217,14 @@ const calculateSimulation = async (req, res) => {
 };
 exports.calculateSimulation = calculateSimulation;
 const isSimulationReady = async (req, res) => {
-    const { round_id } = req.params;
-    if (!req.params) {
+    const round_id = req.params.round_id;
+    if (!req.params.round_id) {
         res.status(500).json({
-            message: "",
+            message: "no hay parametros",
             status: "error",
             payload: null,
         });
+        return;
     }
     try {
         const round = await Round_1.Round.findByPk(round_id, {

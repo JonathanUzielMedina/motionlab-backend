@@ -8,6 +8,6 @@ const simRouter: Router = Router();
 
 simRouter.post("/", calculateSimulation);
 
-simRouter.get("/", isSimulationReady);
+simRouter.get("/:round_id", isSimulationReady);
 
 export default simRouter;

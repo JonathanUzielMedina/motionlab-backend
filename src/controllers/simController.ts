@@ -258,13 +258,14 @@ export const isSimulationReady: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  const { round_id } = req.params;
-  if (!req.params) {
+  const round_id = req.params.round_id;
+  if (!req.params.round_id) {
     res.status(500).json({
-      message: "",
+      message: "no hay parametros",
       status: "error",
       payload: null,
     });
+    return;
   }
   try {
     const round = await Round.findByPk(round_id, {
