@@ -25,7 +25,6 @@ export const getAllTeamStats: RequestHandler = async (
 
 export const updateTeamStats = async (teamId: number, matchId: number) => {
   try {
-    // Get all team scores for this team
     const teamScores = await TeamScore.findAll({
       where: {
         team_id: teamId,
@@ -42,14 +41,11 @@ export const updateTeamStats = async (teamId: number, matchId: number) => {
     });
 
     if (teamScores.length === 0) {
-      console.log(`No scores found for team ${teamId} in match ${matchId}`);
       return;
     }
 
-    // Calculate averages
     const playedRounds = teamScores.length;
 
-    // Calculate average time, ensuring we don't get NaN
     let totalTime = 0;
     let validTimeCount = 0;
 
@@ -61,11 +57,9 @@ export const updateTeamStats = async (teamId: number, matchId: number) => {
       }
     });
 
-    // Default to 0 if no valid times are found
     const averageTime =
       validTimeCount > 0 ? Math.round(totalTime / validTimeCount) : 0;
 
-    // Calculate average position, ensuring we don't get NaN
     let totalPosition = 0;
     let validPositionCount = 0;
 
@@ -77,13 +71,11 @@ export const updateTeamStats = async (teamId: number, matchId: number) => {
       }
     });
 
-    // Default to 0 if no valid positions are found
     const averagePosition =
       validPositionCount > 0
         ? Math.round(totalPosition / validPositionCount)
         : 0;
 
-    // Find or create team stats
     const [teamStats, created] = await TeamStats.findOrCreate({
       where: { team_id: teamId },
       defaults: {
@@ -95,7 +87,6 @@ export const updateTeamStats = async (teamId: number, matchId: number) => {
     });
 
     if (!created) {
-      // Update existing team stats
       await teamStats.update({
         played_rounds: playedRounds,
         average_time: averageTime,
@@ -103,51 +94,8 @@ export const updateTeamStats = async (teamId: number, matchId: number) => {
       });
     }
 
-    console.log(`Team stats updated for team ${teamId}`);
     return teamStats;
   } catch (error) {
-    console.error("Error al actualizar estadísticas de equipos:", error);
     throw error;
   }
 };
-
-// export const updateTeamStats = async (
-//   team_id: number,
-//   match_id: number
-// ): Promise<void> => {
-//   try {
-//     const teamScores = await TeamScore.findAll({
-//       where: {
-//         team_id: team_id,
-//       },
-//     });
-
-//     const playedRounds = teamScores.length;
-//     const totalTime = teamScores.reduce((sum, score) => {
-//       const value = score.time;
-//       return sum + value;
-//     }, 0);
-//     const averageTime = parseFloat((totalTime / playedRounds).toFixed(2));
-
-//     const sumPosition = teamScores.reduce((sum, score) => {
-//       const value = score.position;
-//       return sum + value;
-//     }, 0);
-//     const averagePosition = parseFloat((sumPosition / playedRounds).toFixed(2));
-
-//     const newScore = {
-//       played_rounds: playedRounds,
-//       average_time: averageTime,
-//       average_position: averagePosition,
-//     };
-
-//     const [updatedRows] = await TeamStats.update(newScore, {
-//       where: {
-//         team_id: team_id,
-//       },
-//     });
-//   } catch (error) {
-//     console.error("Error al actualizar estadísticas de equipos:", error);
-//     throw error;
-//   }
-// };
