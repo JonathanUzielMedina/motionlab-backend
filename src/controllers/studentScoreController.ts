@@ -83,6 +83,35 @@ export const getStudentScoresById: RequestHandler = async (
   }
 };
 
+export const getAllStudentScores: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const rawScores = await StudentScore.findAll({
+      order: [["score", "DESC"]],
+    });
+
+    const scores = rawScores.map((score) => ({
+      student_id: score.dataValues.student_id,
+      time: score.dataValues.time,
+      score: score.dataValues.score,
+    }));
+
+    res.status(200).json({
+      message: "Puntajes de los alumnos obtenidos correctamente",
+      status: "success",
+      payload: scores,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Problemas en el servidor " + error,
+      status: "Error",
+      payload: null,
+    });
+  }
+};
+
 export const createStudentScores: RequestHandler = async (
   req: Request,
   res: Response
