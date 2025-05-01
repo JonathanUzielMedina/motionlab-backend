@@ -133,7 +133,7 @@ export const createTeamScore: RequestHandler = async (
       const value = score.dataValues.score || 0;
       return sum + value;
     }, 0);
-    const teamScore = totalScore / totalScores;
+    const teamScore = Math.ceil(totalScore / totalScores);
 
     const time =
       results.time !== undefined && !isNaN(results.time) ? results.time : 0;
