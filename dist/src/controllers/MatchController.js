@@ -165,7 +165,7 @@ const changeMatchStatus = async (req, res) => {
         res.status(200).json({
             message: "Status cambiado correctamente",
             status: "success",
-            payload: null,
+            payload: newStatus,
         });
     }
     catch (error) {

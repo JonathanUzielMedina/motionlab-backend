@@ -161,7 +161,7 @@ export const changeMatchStatus: RequestHandler = async (
       payload: null,
     });
   }
-  const { match_id } = req.body;
+  const { match_id, newStatus } = req.body;
 
   try {
     const match = await Match.findByPk(match_id);
@@ -173,13 +173,12 @@ export const changeMatchStatus: RequestHandler = async (
       });
       return;
     }
-    const newStatus = !match.dataValues.active;
     await match.update({ active: newStatus });
 
     res.status(200).json({
       message: "Status cambiado correctamente",
       status: "success",
-      payload: null,
+      payload: newStatus,
     });
   } catch (error) {
     res.status(500).json({
