@@ -68,6 +68,35 @@ export const getTeamScoreById: RequestHandler = async (
   }
 };
 
+export const getAllTeamScores: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const rawScores = await TeamScore.findAll({
+      order: [["score", "DESC"]],
+    });
+
+    const scores = rawScores.map((score) => ({
+      team_id: score.dataValues.team_id,
+      time: score.dataValues.time,
+      score: score.dataValues.score,
+    }));
+
+    res.status(200).json({
+      message: "Puntajes de los alumnos obtenidos correctamente",
+      status: "success",
+      payload: scores,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Problemas en el servidor " + error,
+      status: "Error",
+      payload: null,
+    });
+  }
+};
+
 export const createTeamScore: RequestHandler = async (
   req: Request,
   res: Response

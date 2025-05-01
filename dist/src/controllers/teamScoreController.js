@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTeamScoresByRound = exports.createTeamScore = exports.getTeamScoreById = void 0;
+exports.getTeamScoresByRound = exports.createTeamScore = exports.getAllTeamScores = exports.getTeamScoreById = void 0;
 const Team_1 = require("../models/Team");
 const TeamScore_1 = require("../models/TeamScore");
 const StudentScore_1 = require("../models/StudentScore");
@@ -43,6 +43,31 @@ const getTeamScoreById = async (req, res) => {
     }
 };
 exports.getTeamScoreById = getTeamScoreById;
+const getAllTeamScores = async (req, res) => {
+    try {
+        const rawScores = await TeamScore_1.TeamScore.findAll({
+            order: [["score", "DESC"]],
+        });
+        const scores = rawScores.map((score) => ({
+            team_id: score.dataValues.team_id,
+            time: score.dataValues.time,
+            score: score.dataValues.score,
+        }));
+        res.status(200).json({
+            message: "Puntajes de los alumnos obtenidos correctamente",
+            status: "success",
+            payload: scores,
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "Problemas en el servidor " + error,
+            status: "Error",
+            payload: null,
+        });
+    }
+};
+exports.getAllTeamScores = getAllTeamScores;
 const createTeamScore = async (req, res) => {
     if (!req.body) {
         res.status(400).json({
