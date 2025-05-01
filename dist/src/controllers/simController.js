@@ -1,7 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.calculateSimulation = void 0;
+exports.isSimulationReady = exports.calculateSimulation = void 0;
 const Match_1 = require("../models/Match");
+const Round_1 = require("../models/Round");
+const TeamScore_1 = require("../models/TeamScore");
 const calculateSimulation = async (req, res) => {
     if (!req.body) {
         res.status(500).json({
@@ -214,3 +216,67 @@ const calculateSimulation = async (req, res) => {
     }
 };
 exports.calculateSimulation = calculateSimulation;
+const isSimulationReady = async (req, res) => {
+    const { round_id } = req.params;
+    if (!req.params) {
+        res.status(500).json({
+            message: "",
+            status: "error",
+            payload: null,
+        });
+    }
+    try {
+        const round = await Round_1.Round.findByPk(round_id, {
+            include: [
+                {
+                    model: Match_1.Match,
+                },
+            ],
+        });
+        if (!round) {
+            res.status(404).json({
+                message: "Round no encontrado",
+                status: "error",
+                payload: null,
+            });
+            return;
+        }
+        const match_id = round.dataValues.match_id;
+        const match = await Match_1.Match.findByPk(match_id);
+        if (!match) {
+            res.status(500).json({
+                message: "Partida no encontrada",
+                status: "error",
+                payload: null,
+            });
+            return;
+        }
+        const roundScores = await TeamScore_1.TeamScore.findAll({
+            where: {
+                round_id: round_id,
+            },
+        });
+        const scoresAmount = roundScores.length;
+        if (scoresAmount < match.dataValues.teams) {
+            res.status(500).json({
+                message: "Aun no se han registrado los scores de todos los equipos",
+                status: "success",
+                payload: false,
+            });
+            return;
+        }
+        res.status(500).json({
+            message: "Se han registrado los scores de todos los equipos",
+            status: "success",
+            payload: true,
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "Error en el servidor " + error,
+            status: "error",
+            payload: null,
+        });
+    }
+};
+exports.isSimulationReady = isSimulationReady;

@@ -8,4 +8,6 @@ matchRouter.get("/", MatchController_1.getAllMatches);
 matchRouter.get("/:id", MatchController_1.getMatchParameters);
 matchRouter.get("/teacher/:id", MatchController_1.getMatchesByTeacherId);
 matchRouter.get("/:code", MatchController_1.getMatchByCode);
+matchRouter.post("/status", MatchController_1.changeMatchStatus);
+matchRouter.get("/status/:match_id", MatchController_1.getMatchStatus);
 exports.default = matchRouter;

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllTeamScores = exports.createTeamScore = exports.getTeamScoreById = void 0;
+exports.getTeamScoresByRound = exports.createTeamScore = exports.getTeamScoreById = void 0;
 const Team_1 = require("../models/Team");
 const TeamScore_1 = require("../models/TeamScore");
 const StudentScore_1 = require("../models/StudentScore");
@@ -154,13 +154,17 @@ const createTeamScore = async (req, res) => {
     }
 };
 exports.createTeamScore = createTeamScore;
-const getAllTeamScores = async (req, res) => {
+const getTeamScoresByRound = async (req, res) => {
     try {
-        const teamScores = await TeamScore_1.TeamScore.findAll();
+        const teamScores = await TeamScore_1.TeamScore.findAll({
+            where: {
+                round_id: req.params,
+            },
+        });
         res.status(200).json({
             message: "Scores de los equipos obtenidos correctamente",
             status: "success",
-            payload: teamScores
+            payload: teamScores,
         });
     }
     catch (error) {
@@ -171,4 +175,4 @@ const getAllTeamScores = async (req, res) => {
         });
     }
 };
-exports.getAllTeamScores = getAllTeamScores;
+exports.getTeamScoresByRound = getTeamScoresByRound;

@@ -76,7 +76,6 @@ export const lobbyAccess: RequestHandler = async (
     const match = await Match.findOne({
       where: {
         code: code,
-        active: true,
       },
     });
 

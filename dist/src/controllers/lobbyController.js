@@ -60,7 +60,6 @@ const lobbyAccess = async (req, res) => {
         const match = await Match_1.Match.findOne({
             where: {
                 code: code,
-                active: true,
             },
         });
         console.log(match);

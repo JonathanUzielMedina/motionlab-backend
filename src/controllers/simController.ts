@@ -1,5 +1,7 @@
 import { Request, Response, RequestHandler } from "express";
 import { Match } from "../models/Match";
+import { Round } from "../models/Round";
+import { TeamScore } from "../models/TeamScore";
 
 export const calculateSimulation: RequestHandler = async (
   req: Request,
@@ -246,6 +248,76 @@ export const calculateSimulation: RequestHandler = async (
   } catch (error) {
     res.status(500).json({
       message: "Hubo problemas en el servidor " + error,
+      status: "error",
+      payload: null,
+    });
+  }
+};
+
+export const isSimulationReady: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const { round_id } = req.params;
+  if (!req.params) {
+    res.status(500).json({
+      message: "",
+      status: "error",
+      payload: null,
+    });
+  }
+  try {
+    const round = await Round.findByPk(round_id, {
+      include: [
+        {
+          model: Match,
+        },
+      ],
+    });
+    if (!round) {
+      res.status(404).json({
+        message: "Round no encontrado",
+        status: "error",
+        payload: null,
+      });
+      return;
+    }
+    const match_id = round.dataValues.match_id;
+    const match = await Match.findByPk(match_id);
+
+    if (!match) {
+      res.status(500).json({
+        message: "Partida no encontrada",
+        status: "error",
+        payload: null,
+      });
+      return;
+    }
+
+    const roundScores = await TeamScore.findAll({
+      where: {
+        round_id: round_id,
+      },
+    });
+
+    const scoresAmount = roundScores.length;
+
+    if (scoresAmount < match.dataValues.teams) {
+      res.status(500).json({
+        message: "Aun no se han registrado los scores de todos los equipos",
+        status: "success",
+        payload: false,
+      });
+      return;
+    }
+    res.status(500).json({
+      message: "Se han registrado los scores de todos los equipos",
+      status: "success",
+      payload: true,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error en el servidor " + error,
       status: "error",
       payload: null,
     });
