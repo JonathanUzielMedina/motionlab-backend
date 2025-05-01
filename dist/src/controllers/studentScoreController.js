@@ -103,28 +103,22 @@ const createStudentScores = async (req, res) => {
                 position: 0,
             });
         });
-        // Crear los scores iniciales
         await StudentScore_1.StudentScore.bulkCreate(scores, { validate: true });
-        // Obtener todos los scores para este round específico
         const allScores = await StudentScore_1.StudentScore.findAll({
             where: { round_id: roundId },
         });
-        // Ordenar scores de mayor a menor (el más alto primero)
         const sortedScores = [...allScores].sort((a, b) => {
             const scoreA = a.dataValues?.score || 0;
             const scoreB = b.dataValues?.score || 0;
             return scoreB - scoreA;
         });
-        // Asignar posiciones correctamente (1 para el más alto, 2 para el segundo, etc.)
         for (let i = 0; i < sortedScores.length; i++) {
-            await StudentScore_1.StudentScore.update({ position: i + 1 }, // Posición 1 para índice 0, 2 para índice 1, etc.
-            {
+            await StudentScore_1.StudentScore.update({ position: i + 1 }, {
                 where: {
-                    id: sortedScores[i].dataValues.id, // Usar el ID único del registro
+                    id: sortedScores[i].dataValues.id,
                 },
             });
         }
-        // Actualizar estadísticas de estudiantes después de asignar posiciones
         await (0, studentController_1.updateStudentStats)(studentsIds, matchId);
         res.status(200).json({
             message: "Nuevos puntajes calculados correctamente y posiciones actualizadas",
@@ -144,9 +138,8 @@ const createStudentScores = async (req, res) => {
 exports.createStudentScores = createStudentScores;
 const deleteAllStudentScores = async (req, res) => {
     try {
-        // Eliminamos todos los registros de la tabla StudentScore
         const deletedCount = await StudentScore_1.StudentScore.destroy({
-            where: {}, // Esto asegura que se eliminen todos los registros
+            where: {},
         });
         if (deletedCount === 0) {
             res.status(404).json({

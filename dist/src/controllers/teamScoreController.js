@@ -88,7 +88,6 @@ const createTeamScore = async (req, res) => {
                 },
             ],
         });
-        // Handle case when no student scores are found
         if (studentScores.length === 0) {
             res.status(400).json({
                 message: "No se encontraron puntajes de estudiantes para este equipo",
@@ -99,11 +98,10 @@ const createTeamScore = async (req, res) => {
         }
         const totalScores = studentScores.length;
         const totalScore = studentScores.reduce((sum, score) => {
-            const value = score.dataValues.score || 0; // Default to 0 if score is not defined
+            const value = score.dataValues.score || 0;
             return sum + value;
         }, 0);
         const teamScore = totalScore / totalScores;
-        // Ensure time is a valid number
         const time = results.time !== undefined && !isNaN(results.time) ? results.time : 0;
         const score = {
             team_id: results.team_id,
@@ -124,10 +122,9 @@ const createTeamScore = async (req, res) => {
             return scoreB - scoreA;
         });
         for (let i = 0; i < sortedScores.length; i++) {
-            await TeamScore_1.TeamScore.update({ position: i + 1 }, // Posición 1 para índice 0, 2 para índice 1, etc.
-            {
+            await TeamScore_1.TeamScore.update({ position: i + 1 }, {
                 where: {
-                    id: sortedScores[i].dataValues.id, // Usar el ID único del registro
+                    id: sortedScores[i].dataValues.id,
                 },
             });
         }
@@ -136,7 +133,6 @@ const createTeamScore = async (req, res) => {
         }
         catch (statsError) {
             console.error("Error updating team stats, but score was created:", statsError);
-            // We continue with the response even if team stats update fails
         }
         res.status(201).json({
             message: "Puntajes de equipos creados exitosamente.",
