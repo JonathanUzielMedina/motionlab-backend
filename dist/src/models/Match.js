@@ -47,6 +47,7 @@ __decorate([
     (0, sequelize_typescript_1.AllowNull)(false),
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.INTEGER,
+        defaultValue: 0,
     }),
     __metadata("design:type", Number)
 ], Match.prototype, "rounds_amount", void 0);

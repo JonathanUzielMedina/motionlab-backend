@@ -11,7 +11,7 @@ const Match_1 = require("../models/Match");
 const Round_1 = require("../models/Round");
 const getTeamScoreById = async (req, res) => {
     try {
-        const { id } = req.params;
+        const id = req.params.id;
         const rawData = await TeamScore_1.TeamScore.findAll({
             include: [
                 {
@@ -154,7 +154,7 @@ const getTeamScoresByRound = async (req, res) => {
     try {
         const teamScores = await TeamScore_1.TeamScore.findAll({
             where: {
-                round_id: req.params,
+                round_id: req.params.id,
             },
         });
         res.status(200).json({

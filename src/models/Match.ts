@@ -48,6 +48,7 @@ export class Match extends Model<MatchAttributes, MatchCreationAttributes> {
   @AllowNull(false)
   @Column({
     type: DataType.INTEGER,
+    defaultValue: 0,
   })
   rounds_amount!: number;
 

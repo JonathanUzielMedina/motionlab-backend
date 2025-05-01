@@ -35,7 +35,7 @@ export const getTeamScoreById: RequestHandler = async (
   res: Response
 ) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id;
     const rawData: TeamScore[] = await TeamScore.findAll({
       include: [
         {
@@ -202,7 +202,7 @@ export const getTeamScoresByRound: RequestHandler = async (
   try {
     const teamScores: TeamScore[] = await TeamScore.findAll({
       where: {
-        round_id: req.params,
+        round_id: req.params.id,
       },
     });
     res.status(200).json({

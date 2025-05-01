@@ -8,7 +8,6 @@ import {
 
 const studentScoreRouter: Router = Router();
 
-studentScoreRouter.get("/:id", getStudentScoresById);
 studentScoreRouter.get("/:id", getStudentScoreByRound);
 studentScoreRouter.post("/", createStudentScores);
 studentScoreRouter.delete("/", deleteAllStudentScores);
