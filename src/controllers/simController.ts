@@ -241,7 +241,7 @@ export const calculateSimulation: RequestHandler = async (
     const data = precalculateMovement();
 
     res.status(200).json({
-      message: "Calculos hechos correctamento",
+      message: "Calculos hechos correctamente",
       status: "success",
       payload: data,
     });
