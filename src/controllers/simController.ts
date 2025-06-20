@@ -164,6 +164,7 @@ export const calculateSimulation: RequestHandler = async (
           tempPositionRef
         );
 
+        force = acceleration * getTotalMass();
         currentVelocity += acceleration * deltaTime;
 
         const isOnRamp = currentX >= rampStartX && currentX <= rampEndX;
@@ -215,8 +216,6 @@ export const calculateSimulation: RequestHandler = async (
           isGoalTwoCompleted = true;
           failedToClimbHill = false;
         }
-
-        force = acceleration * getTotalMass();
 
         const progressPercent = Math.round(calculateTotalProgress(currentX));
 
