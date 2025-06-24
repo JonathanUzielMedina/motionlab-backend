@@ -147,7 +147,6 @@ export const calculateSimulation: RequestHandler = async (
       let currentY = 0;
       let currentVelocity = 0;
       let distanceTraveled = 0;
-      let force = 0;
       let time = 0;
       let isRunning = true;
       let isGoalOneCompleted = false;
@@ -164,7 +163,7 @@ export const calculateSimulation: RequestHandler = async (
           tempPositionRef
         );
 
-        force = acceleration * getTotalMass();
+        const force = acceleration * getTotalMass();
         currentVelocity += acceleration * deltaTime;
 
         const isOnRamp = currentX >= rampStartX && currentX <= rampEndX;
