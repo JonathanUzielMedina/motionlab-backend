@@ -224,6 +224,7 @@ export const calculateSimulation: RequestHandler = async (
           y: currentY,
           velocity: currentVelocity,
           acceleration: acceleration,
+          force,
           isRampBaseReached,
           isRampTopReached,
           isGoalOneCompleted,
@@ -233,7 +234,6 @@ export const calculateSimulation: RequestHandler = async (
           progressPercent,
           failedToClimbHill,
           isOnRamp,
-          force,
         });
         time += deltaTime;
       }
