@@ -15,14 +15,26 @@ const TeamScore_1 = require("../models/TeamScore");
 const TeamStats_1 = require("../models/TeamStats");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const connection = new sequelize_typescript_1.Sequelize(process.env.DB_URL, {
+/*
+Se modificó la modificación al comentar la conexión de Postgres
+y habilitar la conexión a una BB.DD. local de MySQL.
+*/
+const connection = new sequelize_typescript_1.Sequelize(//process.env.DB_URL as string,
+{
+    /*
     dialect: "postgres",
     dialectOptions: {
-        ssl: {
-            require: true,
-            rejectUnauthorized: false,
-        },
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
     },
+    */
+    database: "motionlab",
+    dialect: "mysql",
+    username: "motionlab_user",
+    password: "MotionLab2576",
+    storage: ":memory:",
     models: [
         Match_1.Match,
         Round_1.Round,

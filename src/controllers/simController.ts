@@ -147,7 +147,6 @@ export const calculateSimulation: RequestHandler = async (
       let currentY = 0;
       let currentVelocity = 0;
       let distanceTraveled = 0;
-      let force = 0;
       let time = 0;
       let isRunning = true;
       let isGoalOneCompleted = false;
@@ -164,6 +163,7 @@ export const calculateSimulation: RequestHandler = async (
           tempPositionRef
         );
 
+        const force = acceleration * getTotalMass();
         currentVelocity += acceleration * deltaTime;
 
         const isOnRamp = currentX >= rampStartX && currentX <= rampEndX;
@@ -216,8 +216,6 @@ export const calculateSimulation: RequestHandler = async (
           failedToClimbHill = false;
         }
 
-        force = acceleration * getTotalMass();
-
         const progressPercent = Math.round(calculateTotalProgress(currentX));
 
         movementData.push({
@@ -226,6 +224,7 @@ export const calculateSimulation: RequestHandler = async (
           y: currentY,
           velocity: currentVelocity,
           acceleration: acceleration,
+          force: force,
           isRampBaseReached,
           isRampTopReached,
           isGoalOneCompleted,
@@ -235,7 +234,6 @@ export const calculateSimulation: RequestHandler = async (
           progressPercent,
           failedToClimbHill,
           isOnRamp,
-          force,
         });
         time += deltaTime;
       }
