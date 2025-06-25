@@ -16,9 +16,8 @@ Se modificó la modificación al comentar la conexión de Postgres
 y habilitar la conexión a una BB.DD. local de MySQL.
 */
 
-const connection = new Sequelize(//process.env.DB_URL as string,
-  { 
-    /*
+const connection = new Sequelize(process.env.DB_URL as string,
+  {
     dialect: "postgres",
     dialectOptions: {
       ssl: {
@@ -26,12 +25,13 @@ const connection = new Sequelize(//process.env.DB_URL as string,
         rejectUnauthorized: false,
       },
     },
-    */
+    /*
     database: "motionlab",
     dialect: "mysql",
     username: "motionlab_user",
     password: "MotionLab2576",
     storage: ":memory:",
+    */
     models: [
       Match,
       Round,
