@@ -224,7 +224,7 @@ export const calculateSimulation: RequestHandler = async (
           y: currentY,
           velocity: currentVelocity,
           acceleration: acceleration,
-          force,
+          force: force,
           isRampBaseReached,
           isRampTopReached,
           isGoalOneCompleted,
