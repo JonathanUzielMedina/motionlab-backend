@@ -163,7 +163,7 @@ export const calculateSimulation: RequestHandler = async (
           tempPositionRef
         );
 
-        const force = acceleration * getTotalMass();
+        let force = acceleration * getTotalMass();
         currentVelocity += acceleration * deltaTime;
 
         const isOnRamp = currentX >= rampStartX && currentX <= rampEndX;

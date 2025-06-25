@@ -11,27 +11,28 @@ import { TeamStats } from "../models/TeamStats";
 import dotenv from "dotenv";
 dotenv.config();
 
-/*
-Se modificó la modificación al comentar la conexión de Postgres
-y habilitar la conexión a una BB.DD. local de MySQL.
-*/
 
-const connection = new Sequelize(//process.env.DB_URL as string,
-  { 
-    /*
+// Se modificó la conexión a una base de datos local para poder realizar pruebas.
+
+const connection = new Sequelize(
+  
+  // process.env.DB_URL as string,
+  {
+    /* 
     dialect: "postgres",
     dialectOptions: {
       ssl: {
         require: true,
         rejectUnauthorized: false,
       },
-    },
+    }
     */
-    database: "motionlab",
     dialect: "mysql",
-    username: "motionlab_user",
-    password: "MotionLab2576",
+    database: process.env.database,
+    username: process.env.user,
+    password: process.env.password,
     storage: ":memory:",
+    host: process.env.host,
     models: [
       Match,
       Round,

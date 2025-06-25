@@ -129,7 +129,6 @@ const calculateSimulation = async (req, res) => {
             let currentY = 0;
             let currentVelocity = 0;
             let distanceTraveled = 0;
-            let force = 0;
             let time = 0;
             let isRunning = true;
             let isGoalOneCompleted = false;
@@ -140,7 +139,7 @@ const calculateSimulation = async (req, res) => {
             while (isRunning && time < 100) {
                 const tempPositionRef = { x: currentX, y: currentY };
                 const acceleration = calculateAccelerationForSimulation(currentVelocity, tempPositionRef);
-                force = acceleration * getTotalMass();
+                let force = acceleration * getTotalMass();
                 currentVelocity += acceleration * deltaTime;
                 const isOnRamp = currentX >= rampStartX && currentX <= rampEndX;
                 if (isOnRamp && currentVelocity < 0) {
@@ -188,6 +187,7 @@ const calculateSimulation = async (req, res) => {
                     y: currentY,
                     velocity: currentVelocity,
                     acceleration: acceleration,
+                    force: force,
                     isRampBaseReached,
                     isRampTopReached,
                     isGoalOneCompleted,
@@ -197,7 +197,6 @@ const calculateSimulation = async (req, res) => {
                     progressPercent,
                     failedToClimbHill,
                     isOnRamp,
-                    force,
                 });
                 time += deltaTime;
             }
