@@ -15,14 +15,25 @@ const TeamScore_1 = require("../models/TeamScore");
 const TeamStats_1 = require("../models/TeamStats");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const connection = new sequelize_typescript_1.Sequelize(process.env.DB_URL, {
+// Se modificó la conexión a una base de datos local para poder realizar pruebas.
+const connection = new sequelize_typescript_1.Sequelize(
+// process.env.DB_URL as string,
+{
+    /*
     dialect: "postgres",
     dialectOptions: {
-        ssl: {
-            require: true,
-            rejectUnauthorized: false,
-        },
-    },
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
+    }
+    */
+    dialect: "mysql",
+    database: process.env.database,
+    username: process.env.user,
+    password: process.env.password,
+    storage: ":memory:",
+    host: process.env.host,
     models: [
         Match_1.Match,
         Round_1.Round,

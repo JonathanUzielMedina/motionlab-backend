@@ -139,6 +139,7 @@ const calculateSimulation = async (req, res) => {
             while (isRunning && time < 100) {
                 const tempPositionRef = { x: currentX, y: currentY };
                 const acceleration = calculateAccelerationForSimulation(currentVelocity, tempPositionRef);
+                let force = acceleration * getTotalMass();
                 currentVelocity += acceleration * deltaTime;
                 const isOnRamp = currentX >= rampStartX && currentX <= rampEndX;
                 if (isOnRamp && currentVelocity < 0) {
@@ -186,6 +187,7 @@ const calculateSimulation = async (req, res) => {
                     y: currentY,
                     velocity: currentVelocity,
                     acceleration: acceleration,
+                    force: force,
                     isRampBaseReached,
                     isRampTopReached,
                     isGoalOneCompleted,
@@ -202,7 +204,7 @@ const calculateSimulation = async (req, res) => {
         };
         const data = precalculateMovement();
         res.status(200).json({
-            message: "Calculos hechos correctamento",
+            message: "Calculos hechos correctamente",
             status: "success",
             payload: data,
         });

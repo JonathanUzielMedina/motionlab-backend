@@ -163,6 +163,7 @@ export const calculateSimulation: RequestHandler = async (
           tempPositionRef
         );
 
+        let force = acceleration * getTotalMass();
         currentVelocity += acceleration * deltaTime;
 
         const isOnRamp = currentX >= rampStartX && currentX <= rampEndX;
@@ -223,6 +224,7 @@ export const calculateSimulation: RequestHandler = async (
           y: currentY,
           velocity: currentVelocity,
           acceleration: acceleration,
+          force: force,
           isRampBaseReached,
           isRampTopReached,
           isGoalOneCompleted,
@@ -241,7 +243,7 @@ export const calculateSimulation: RequestHandler = async (
     const data = precalculateMovement();
 
     res.status(200).json({
-      message: "Calculos hechos correctamento",
+      message: "Calculos hechos correctamente",
       status: "success",
       payload: data,
     });
