@@ -120,6 +120,10 @@ export const calculateSimulation: RequestHandler = async (
       }
     };
 
+    const calculateXPostionInMeters = (xPos: number) => {
+      return (xPos - startX) / PIXELS_PER_METER;
+    }
+
     const calculateTotalProgress = (xPos: number) => {
       if (xPos <= flag1X) {
         return ((xPos - startX) / totalCoursePixels) * 100;
@@ -144,6 +148,7 @@ export const calculateSimulation: RequestHandler = async (
     const precalculateMovement = () => {
       const movementData = [];
       let currentX = 50;
+      let currentPositionInMeters = 0;
       let currentY = 0;
       let currentVelocity = 0;
       let distanceTraveled = 0;
@@ -202,6 +207,7 @@ export const calculateSimulation: RequestHandler = async (
         }
 
         currentX = newX;
+        currentPositionInMeters = calculateXPostionInMeters(currentX);
         currentY = calculateYPosition(currentX);
 
         const isRampBaseReached = currentX >= rampStartX;
@@ -225,6 +231,7 @@ export const calculateSimulation: RequestHandler = async (
           velocity: currentVelocity,
           acceleration: acceleration,
           force: force,
+          positionMeters: currentPositionInMeters,
           isRampBaseReached,
           isRampTopReached,
           isGoalOneCompleted,
