@@ -157,6 +157,9 @@ export const calculateSimulation: RequestHandler = async (
       let isGoalOneCompleted = false;
       let isGoalTwoCompleted = false;
       let isGoalThreeCompleted = false;
+      let goalOneTime = 0;
+      let goalTwoTime = 0;
+      let goalThreeTime = 0;
       let failedToClimbHill = false;
 
       const deltaTime = 1 / 60;
@@ -203,6 +206,7 @@ export const calculateSimulation: RequestHandler = async (
           distanceTraveled = (newX - 50) / PIXELS_PER_METER;
           currentVelocity = 0;
           isGoalThreeCompleted = true;
+          goalThreeTime = time;
           isRunning = false;
         }
 
@@ -215,10 +219,12 @@ export const calculateSimulation: RequestHandler = async (
 
         if (!isGoalOneCompleted && isRampBaseReached) {
           isGoalOneCompleted = true;
+          goalOneTime = time;
         }
 
         if (!isGoalTwoCompleted && isRampTopReached) {
           isGoalTwoCompleted = true;
+          goalTwoTime = time;
           failedToClimbHill = false;
         }
 
@@ -237,6 +243,9 @@ export const calculateSimulation: RequestHandler = async (
           isGoalOneCompleted,
           isGoalTwoCompleted,
           isGoalThreeCompleted,
+          goalOneTime,
+          goalTwoTime,
+          goalThreeTime,
           distanceTraveled,
           progressPercent,
           failedToClimbHill,

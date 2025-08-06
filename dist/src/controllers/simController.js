@@ -138,6 +138,7 @@ const calculateSimulation = async (req, res) => {
             let isGoalOneCompleted = false;
             let isGoalTwoCompleted = false;
             let isGoalThreeCompleted = false;
+            let goalOneTime = 0;
             let failedToClimbHill = false;
             const deltaTime = 1 / 60;
             while (isRunning && time < 100) {
